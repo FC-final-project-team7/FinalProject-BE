@@ -1,4 +1,4 @@
-package com.aipark.dto;
+package com.aipark.web.dto;
 
 public class MemberDto {
 }

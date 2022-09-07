@@ -1,4 +1,4 @@
-package com.aipark.domain.member;
+package com.aipark.biz.domain.member;
 
 public interface MemberRepository {
 }

@@ -1,4 +1,4 @@
-package com.aipark.service;
+package com.aipark.biz.service;
 
 import org.springframework.stereotype.Service;
 

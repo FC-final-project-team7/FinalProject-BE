@@ -1,4 +1,4 @@
-package com.aipark.controller;
+package com.aipark.web.controller;
 
 import org.springframework.stereotype.Controller;
 
