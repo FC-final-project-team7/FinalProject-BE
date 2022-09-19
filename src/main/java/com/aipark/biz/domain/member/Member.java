@@ -3,6 +3,7 @@ package com.aipark.biz.domain.member;
 import com.aipark.biz.domain.BaseTimeEntity;
 import com.aipark.biz.domain.enums.Authority;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,5 +38,14 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    @Builder
+    public Member(String username, String email, String password, String name, String phoneNumber, Authority authority) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.authority = authority;
+    }
 }
 
