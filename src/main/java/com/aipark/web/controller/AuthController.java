@@ -5,10 +5,7 @@ import com.aipark.web.dto.MemberDto;
 import com.aipark.web.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,12 +14,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<MemberDto.MemberResponse> signup(@RequestBody MemberDto.MemberRequest memberRequestDto){
+    public ResponseEntity<MemberDto.MemberResponse> signup(@RequestBody MemberDto.SignRequest memberRequestDto){
         return ResponseEntity.ok(authService.signup(memberRequestDto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody MemberDto.MemberRequest memberRequestDto) {
+    public ResponseEntity<TokenDto.TokenResponse> login(@RequestBody MemberDto.LoginRequest memberRequestDto) {
         return ResponseEntity.ok(authService.login(memberRequestDto));
     }
 }
