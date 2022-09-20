@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -20,9 +22,10 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final RedisService redisService;
 
     @Transactional
-    public MemberDto.MemberResponse signup(MemberDto.MemberRequest memberRequestDto) {
+    public MemberDto.MemberResponse signup(MemberDto.SignRequest memberRequestDto) {
         if (memberRepository.existsByUsername(memberRequestDto.getUsername())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
@@ -32,18 +35,22 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto login(MemberDto.MemberRequest memberRequestDto) {
+    public TokenDto.TokenResponse login(MemberDto.LoginRequest memberRequestDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestDto.toAuthentication();
 
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
-        //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
+        //    authenticate 메서드가 실행이 될 때 PrincipalDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenDto tokenDto = tokenProvider.createTokenDto(authentication);
+        TokenDto.TokenResponse tokenResponseDto = tokenProvider.createTokenDto(authentication);
 
+        // redis refresh토큰 저장
+        redisService.setValues(memberRequestDto.getUsername(),
+                tokenResponseDto.getRefreshToken(),
+                Duration.ofMillis(tokenResponseDto.getTokenExpiresIn()));
         // 5. 토큰 발급
-        return tokenDto;
+        return tokenResponseDto;
     }
 }

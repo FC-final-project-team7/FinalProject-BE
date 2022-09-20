@@ -31,6 +31,9 @@ public class PrincipalDetailsService implements UserDetailsService {
     private UserDetails createUserDetails(Member member){
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
 
-        return new User(String.valueOf(member.getId()), member.getPassword(), Collections.singleton(grantedAuthority));
+        return new User(
+                member.getUsername(),
+                member.getPassword(),
+                Collections.singleton(grantedAuthority));
     }
 }
