@@ -14,7 +14,20 @@ public class MemberDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class MemberRequest{
+    public static class LoginRequest{
+        private String username;
+        private String password;
+
+        public UsernamePasswordAuthenticationToken toAuthentication() {
+            return new UsernamePasswordAuthenticationToken(username, password);
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class SignRequest {
         private String username;
         private String email;
         private String password;
@@ -27,11 +40,9 @@ public class MemberDto {
                     .email(email)
                     .password(passwordEncoder.encode(password))
                     .name(name)
+                    .phoneNumber(phoneNumber)
                     .authority(Authority.ROLE_USER)
                     .build();
-        }
-        public UsernamePasswordAuthenticationToken toAuthentication() {
-            return new UsernamePasswordAuthenticationToken(email, password);
         }
     }
 
