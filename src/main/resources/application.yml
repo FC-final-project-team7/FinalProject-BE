@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://aidatabase.ch6z9mmu9bas.ap-northeast-2.rds.amazonaws.com:3306/aiservice?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/aiproject?autoReconnect=true
     username:
     password:
 
@@ -18,3 +18,6 @@ spring:
     show-sql: true
     properties:
       hibernate.format_sql: true
+
+jwt:
+  secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK
