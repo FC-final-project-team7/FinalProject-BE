@@ -53,4 +53,25 @@ public class AuthService {
         // 5. 토큰 발급
         return tokenResponseDto;
     }
+
+    public TokenDto.TokenResponse reIssue(TokenDto.TokenRequest tokenRequestDto) {
+        if(!tokenProvider.validateToken(tokenRequestDto.getRefreshToken())){
+            throw new RuntimeException("Refresh Token 유효하지 않음");
+        }
+
+        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
+
+        String refreshToken = redisService.getValues(authentication.getName());
+        if(!refreshToken.equals(tokenRequestDto.getRefreshToken())){
+            throw new RuntimeException("Refresh Token 만료됨");
+        }
+
+        TokenDto.TokenResponse tokenResponseDto = tokenProvider.createTokenDto(authentication);
+
+        redisService.setValues(authentication.getName(),
+                tokenResponseDto.getRefreshToken(),
+                Duration.ofMillis(tokenResponseDto.getTokenExpiresIn()));
+
+        return tokenResponseDto;
+    }
 }

@@ -22,4 +22,9 @@ public class AuthController {
     public ResponseEntity<TokenDto.TokenResponse> login(@RequestBody MemberDto.LoginRequest memberRequestDto) {
         return ResponseEntity.ok(authService.login(memberRequestDto));
     }
+
+    @PostMapping("/re-issue")
+    public ResponseEntity<TokenDto.TokenResponse> reIssue(@RequestBody TokenDto.TokenRequest tokenRequestDto){
+       return ResponseEntity.ok(authService.reIssue(tokenRequestDto));
+    }
 }
