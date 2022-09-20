@@ -4,17 +4,29 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
 public class TokenDto {
-    private String grantType;
-    private String accessToken;
-    private Long tokenExpiresIn;
 
-    @Builder
-    public TokenDto(String grantType, String accessToken, Long tokenExpiresIn) {
-        this.grantType = grantType;
-        this.accessToken = accessToken;
-        this.tokenExpiresIn = tokenExpiresIn;
+    @Getter
+    @NoArgsConstructor
+    public static class TokenRequest{
+        private String accessToken;
+        private String refreshToken;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class TokenResponse{
+        private String grantType;
+        private String accessToken;
+        private String refreshToken;
+        private Long tokenExpiresIn;
+
+        @Builder
+        public TokenResponse(String grantType, String accessToken, String refreshToken, Long tokenExpiresIn) {
+            this.grantType = grantType;
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
+            this.tokenExpiresIn = tokenExpiresIn;
+        }
     }
 }
