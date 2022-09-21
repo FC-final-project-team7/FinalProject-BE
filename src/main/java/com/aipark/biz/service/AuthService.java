@@ -74,4 +74,20 @@ public class AuthService {
 
         return tokenResponseDto;
     }
+
+    public void logout(TokenDto.TokenRequest tokenRequestDto) {
+        if(!tokenProvider.validateToken(tokenRequestDto.getAccessToken())){
+            throw new RuntimeException("Access Token 유효하지 않음");
+        }
+
+        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
+
+        Long expiredAccessTokenTime = tokenProvider.getExpiration(tokenRequestDto.getAccessToken());
+
+        redisService.setValues(tokenRequestDto.getAccessToken(),
+                authentication.getName(),
+                Duration.ofMillis(expiredAccessTokenTime));
+
+        redisService.deleteValues(authentication.getName());
+    }
 }

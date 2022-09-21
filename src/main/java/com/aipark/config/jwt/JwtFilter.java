@@ -1,5 +1,6 @@
 package com.aipark.config.jwt;
 
+import com.aipark.biz.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,14 +19,18 @@ public class JwtFilter extends OncePerRequestFilter {
     static String HEADER_STRING = "Authorization";
 
     private final TokenProvider tokenProvider;
+    private final RedisService redisService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = resolveToken(request);
-
-        if(StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)){
-            Authentication authentication = tokenProvider.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if(jwt != null && tokenProvider.validateToken(jwt)) {
+            String logout = redisService.getValues(jwt);
+//            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+            if(!StringUtils.hasText(logout)){
+                Authentication authentication = tokenProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
         filterChain.doFilter(request, response);
     }
