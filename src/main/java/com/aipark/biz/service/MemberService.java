@@ -14,7 +14,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public MemberDto.MemberResponse getMyInfo() {
-        return memberRepository.findById(SecurityUtil.getCurrentMemberId())
+        return memberRepository.findByUsername(SecurityUtil.getCurrentMemberName())
                 .map(MemberDto.MemberResponse::of)
                 .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
     }
