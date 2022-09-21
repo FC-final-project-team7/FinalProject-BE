@@ -1,5 +1,6 @@
 package com.aipark.config;
 
+import com.aipark.biz.service.RedisService;
 import com.aipark.config.jwt.JwtAccessDeniedHandler;
 import com.aipark.config.jwt.JwtAuthenticationEntryPoint;
 import com.aipark.config.jwt.JwtSecurityConfig;
@@ -18,6 +19,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 public class SecurityConfig {
     private final TokenProvider tokenProvider;
+    private final RedisService redisService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final CorsFilter corsFilter;
@@ -55,7 +57,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
                 .and()
 
-                .apply(new JwtSecurityConfig(tokenProvider));
+                .apply(new JwtSecurityConfig(tokenProvider, redisService));
 
         return http.build();
     }
