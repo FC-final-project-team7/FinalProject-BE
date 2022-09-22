@@ -96,15 +96,4 @@ public class AuthService {
 
         redisService.deleteValues(authentication.getName());
     }
-
-    @Transactional
-    public void changePassword(MemberDto.ChangeRequest changeRequestDto) {
-        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
-                () -> new MemberException(MemberErrorResult.NOT_FOUND));
-
-        if(!passwordEncoder.matches(changeRequestDto.getCurPassword(), member.getPassword())){
-            throw new MemberException(MemberErrorResult.BAD_PASSWORD);
-        }
-        member.changePassword(passwordEncoder.encode(changeRequestDto.getChangePassword()));
-    }
 }
