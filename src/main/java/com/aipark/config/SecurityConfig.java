@@ -6,6 +6,7 @@ import com.aipark.config.jwt.JwtAuthenticationEntryPoint;
 import com.aipark.config.jwt.JwtSecurityConfig;
 import com.aipark.config.jwt.TokenProvider;
 import com.aipark.config.oauth.CustomOAuth2UserService;
+import com.aipark.config.oauth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,6 +26,7 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final CorsFilter corsFilter;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2SuccessHandler OAuth2SuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -60,6 +62,7 @@ public class SecurityConfig {
 
                 .and()
                 .oauth2Login()
+                .successHandler(OAuth2SuccessHandler)
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
 
