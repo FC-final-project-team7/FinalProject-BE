@@ -15,7 +15,7 @@ spring:
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope:
-              - profile
+              - name
               - email
         provider:
           naver:
