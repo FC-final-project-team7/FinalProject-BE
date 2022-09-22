@@ -60,5 +60,9 @@ public class Member extends BaseTimeEntity {
             project.setMember(this);
         }
     }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }
 
