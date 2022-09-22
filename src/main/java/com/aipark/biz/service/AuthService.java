@@ -2,10 +2,15 @@ package com.aipark.biz.service;
 
 import com.aipark.biz.domain.member.Member;
 import com.aipark.biz.domain.member.MemberRepository;
+import com.aipark.config.SecurityUtil;
 import com.aipark.config.jwt.TokenProvider;
+import com.aipark.exception.MemberException;
+import com.aipark.exception.MemberErrorResult;
 import com.aipark.web.dto.MemberDto;
 import com.aipark.web.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -15,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -89,5 +95,16 @@ public class AuthService {
                 Duration.ofMillis(expiredAccessTokenTime));
 
         redisService.deleteValues(authentication.getName());
+    }
+
+    @Transactional
+    public void changePassword(MemberDto.ChangeRequest changeRequestDto) {
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new MemberException(MemberErrorResult.NOT_FOUND));
+
+        if(!passwordEncoder.matches(changeRequestDto.getCurPassword(), member.getPassword())){
+            throw new MemberException(MemberErrorResult.BAD_PASSWORD);
+        }
+        member.changePassword(passwordEncoder.encode(changeRequestDto.getChangePassword()));
     }
 }

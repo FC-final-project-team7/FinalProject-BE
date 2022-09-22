@@ -36,4 +36,9 @@ public class AuthController {
         authService.logout(tokenRequestDto);
         return "로그아웃되셨습니다.";
     }
+    @PostMapping("/change-password")
+    public void changePassword(@RequestBody MemberDto.ChangeRequest changeRequestDto){
+        authService.changePassword(changeRequestDto);
+
+    }
 }
