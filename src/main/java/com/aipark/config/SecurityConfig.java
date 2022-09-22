@@ -53,6 +53,7 @@ public class SecurityConfig {
                         , "/swagger-ui.html" //"/swagger-ui/index.html"
                         , "/webjars/**"
                         , "/swagger/**"
+                        , "/favicon.ico"
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and()
