@@ -62,7 +62,7 @@ public class SecurityConfig {
                 .oauth2Login()
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
-        
+
         http.apply(new JwtSecurityConfig(tokenProvider, redisService));
 
 
