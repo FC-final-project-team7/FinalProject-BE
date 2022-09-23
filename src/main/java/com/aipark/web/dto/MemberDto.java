@@ -35,6 +35,13 @@ public class MemberDto {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
+    public static class CheckIdRequest{
+        private String username;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
     @Builder
     public static class SignRequest {
         private String username;
