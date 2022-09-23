@@ -42,4 +42,8 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
+    @Transactional(readOnly = true)
+    public boolean memberCheck(MemberDto.CheckIdRequest checkIdRequest) {
+        return memberRepository.existsByUsername(checkIdRequest.getUsername());
+    }
 }
