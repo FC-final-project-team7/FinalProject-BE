@@ -14,6 +14,15 @@ public class MemberDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
+    public static class ChangeRequest{
+        private String curPassword;
+        private String changePassword;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
     public static class LoginRequest{
         private String username;
         private String password;
@@ -21,6 +30,13 @@ public class MemberDto {
         public UsernamePasswordAuthenticationToken toAuthentication() {
             return new UsernamePasswordAuthenticationToken(username, password);
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CheckIdRequest{
+        private String username;
     }
 
     @Getter
