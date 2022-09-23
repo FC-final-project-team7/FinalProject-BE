@@ -16,9 +16,12 @@ public class MemberController {
     public ResponseEntity<MemberDto.MemberResponse> getMyMemberInfo(){
         return ResponseEntity.ok(memberService.getMyInfo());
     }
-    @PostMapping("/change-password")
-    public void changePassword(@RequestBody MemberDto.ChangeRequest changeRequestDto){
+
+    @PostMapping("/edit")
+    public ResponseEntity<String> changePassword(@RequestBody MemberDto.ChangeRequest changeRequestDto){
         memberService.changePassword(changeRequestDto);
+        return ResponseEntity.ok("비밀번호 성공하셨습니다.");
+    }
 
     }
 
