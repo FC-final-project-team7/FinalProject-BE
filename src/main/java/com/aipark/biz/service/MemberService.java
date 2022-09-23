@@ -33,4 +33,13 @@ public class MemberService {
         }
         member.changePassword(passwordEncoder.encode(changeRequestDto.getChangePassword()));
     }
+
+    @Transactional
+    public void memberDrop(){
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
+
+        memberRepository.delete(member);
+    }
+
 }
