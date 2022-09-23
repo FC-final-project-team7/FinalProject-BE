@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Map;
 
-@Slf4j
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     @Override
@@ -26,9 +25,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
-
-        log.info("registrationId={}", registrationId);
-        log.info("userNameAttributeName={}", userNameAttributeName);
 
         OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 

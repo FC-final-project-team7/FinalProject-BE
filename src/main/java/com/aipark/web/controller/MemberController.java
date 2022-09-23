@@ -18,5 +18,4 @@ public class MemberController {
     public ResponseEntity<MemberDto.MemberResponse> getMyMemberInfo(){
         return ResponseEntity.ok(memberService.getMyInfo());
     }
-
 }

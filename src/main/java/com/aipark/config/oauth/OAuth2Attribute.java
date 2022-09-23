@@ -36,7 +36,7 @@ public class OAuth2Attribute {
                 .provider("google")
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
-                .password(UUID.randomUUID().toString())
+                .password((String) attributes.get(attributeKey))
                 .attributes(attributes)
                 .attributeKey(attributeKey)
                 .build();
@@ -46,10 +46,10 @@ public class OAuth2Attribute {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
         return OAuth2Attribute.builder()
-                .provider("google")
-                .name((String) attributes.get("name"))
-                .email((String) attributes.get("email"))
-                .password(UUID.randomUUID().toString())
+                .provider("naver")
+                .name((String) response.get("name"))
+                .email((String) response.get("email"))
+                .password((String) response.get(attributeKey))
                 .attributes(response)
                 .attributeKey(attributeKey)
                 .build();
@@ -60,7 +60,7 @@ public class OAuth2Attribute {
 
         map.put("id", attributeKey);
         map.put("key", attributeKey);
-        map.put("username", provider + attributeKey);
+        map.put("username", provider + "-" +attributes.get(attributeKey));
         map.put("password", password);
         map.put("name", name);
         map.put("email", email);
