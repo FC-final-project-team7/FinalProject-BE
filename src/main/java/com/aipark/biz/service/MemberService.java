@@ -21,16 +21,29 @@ public class MemberService {
     public MemberDto.MemberResponse getMyInfo() {
         return memberRepository.findByUsername(SecurityUtil.getCurrentMemberName())
                 .map(MemberDto.MemberResponse::of)
-                .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다"));
+                .orElseThrow(() -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
     }
     @Transactional
     public void changePassword(MemberDto.ChangeRequest changeRequestDto) {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
-                () -> new MemberException(MemberErrorResult.NOT_FOUND));
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
 
         if(!passwordEncoder.matches(changeRequestDto.getCurPassword(), member.getPassword())){
             throw new MemberException(MemberErrorResult.BAD_PASSWORD);
         }
         member.changePassword(passwordEncoder.encode(changeRequestDto.getChangePassword()));
+    }
+
+    @Transactional
+    public void memberDrop(){
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
+
+        memberRepository.delete(member);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean memberCheck(MemberDto.CheckIdRequest checkIdRequest) {
+        return memberRepository.existsByUsername(checkIdRequest.getUsername());
     }
 }
