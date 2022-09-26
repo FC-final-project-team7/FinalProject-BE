@@ -11,9 +11,9 @@ public class ProjectDto {
     @Builder
     public static class TextResponse {
         private String text;
-        private Long pitch;
-        private Long speed;
-        private Long durationSilence;
+        private Double pitch;
+        private Double speed;
+        private Double durationSilence;
         private String language;
         private String sex;
 
@@ -36,7 +36,7 @@ public class ProjectDto {
 
         public static AudioResponse of(Project project){
             return AudioResponse.builder()
-                    .audioName(project.getAudioName())
+                    .audioName(project.getAudio())
                     .build();
         }
     }
@@ -49,26 +49,38 @@ public class ProjectDto {
     public static class BasicDto {
         private Long projectId;
         private String projectName;
-        private String avatarAudioName;
+        private String avatarAudio;
         private String sex;
         private String language;
-        private Long durationSilence;
-        private Long pitch;
-        private Long speed;
+        private Double durationSilence;
+        private Double pitch;
+        private Double speed;
         private String text;
-        private String audioName;
+        private String audio;
         private boolean isAudio;
+        private String avatar;
+        private String category1;
+        private String category2;
+        private String category3;
+        private String background;
 
         public Project toEntity(){
             return Project.builder()
-                    .text(text)
+                    .projectName(projectName)
+                    .avatarAudio(avatarAudio)
+                    .sex(sex)
+                    .language(language)
+                    .durationSilence(durationSilence)
                     .pitch(pitch)
                     .speed(speed)
-                    .durationSilence(durationSilence)
-                    .language(language)
-                    .sex(sex)
-                    .audioName(audioName)
+                    .text(text)
+                    .audio(audio)
                     .isAudio(isAudio)
+                    .avatar(avatar)
+                    .category1(category1)
+                    .category2(category2)
+                    .category3(category3)
+                    .background(background)
                     .build();
         }
     }
