@@ -21,11 +21,19 @@ public class ProjectService {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 멤버가 없습니다."));
 
-        Project project = Project.builder().isAudio(false).build();
+        Project project = Project.defaultCreate();
         member.addProject(project);
 
         projectRepository.save(project);
         return ProjectDto.TextResponse.of(project);
+    }
+
+    @Transactional
+    public void textAutoSave(ProjectDto.BasicDto requestDto){
+        Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
+                () -> new RuntimeException("해당 프로젝트를 찾지 못하였습니다"));
+
+        project.updateProject(requestDto);
     }
 
     @Transactional
