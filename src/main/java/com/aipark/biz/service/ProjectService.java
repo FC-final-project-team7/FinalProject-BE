@@ -17,11 +17,11 @@ public class ProjectService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public ProjectDto.TextResponse textSave(ProjectDto.TextSaveRequest requestDto) {
+    public ProjectDto.TextResponse textSave() {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 멤버가 없습니다."));
 
-        Project project = requestDto.toEntity();
+        Project project = Project.builder().isAudio(false).build();
         member.addProject(project);
 
         projectRepository.save(project);
@@ -29,11 +29,11 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectDto.AudioResponse audioSave(ProjectDto.AudioSaveRequest requestDto) {
+    public ProjectDto.AudioResponse audioSave() {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 멤버가 없습니다."));
 
-        Project project = requestDto.toEntity();
+        Project project = Project.builder().isAudio(true).build();
         member.addProject(project);
 
         projectRepository.save(project);
