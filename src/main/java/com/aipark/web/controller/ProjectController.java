@@ -34,4 +34,14 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.audioSave());
 
     }
+
+    /**
+     * 프로젝트 리스트에서 프로젝트 하나를 요청할 때 사용한다.
+     * @RequestBody project_id(프로젝트 기본키 값)
+     * @return
+     */
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ProjectDto.BasicDto> getProject(@PathVariable Long projectId) {
+        return ResponseEntity.ok(projectService.getProject(projectId));
+    }
 }
