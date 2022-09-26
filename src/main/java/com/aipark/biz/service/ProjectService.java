@@ -60,9 +60,6 @@ public class ProjectService {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new IllegalArgumentException("해당하는 멤버가 없습니다."));
 
-        if (member.getUsername().equals(projectUsername)) {
-            return true;
-        }
-        return false;
+        return member.getUsername().equals(projectUsername);
     }
 }
