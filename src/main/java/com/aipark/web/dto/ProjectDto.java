@@ -46,13 +46,18 @@ public class ProjectDto {
     @AllArgsConstructor
     @Builder
     @ToString
-    public static class TextSaveRequest {
-        private String text;
+    public static class BasicDto {
+        private Long projectId;
+        private String projectName;
+        private String avatarAudioName;
+        private String sex;
+        private String language;
+        private Long durationSilence;
         private Long pitch;
         private Long speed;
-        private Long durationSilence;
-        private String language;
-        private String sex;
+        private String text;
+        private String audioName;
+        private boolean isAudio;
 
         public Project toEntity(){
             return Project.builder()
@@ -62,28 +67,8 @@ public class ProjectDto {
                     .durationSilence(durationSilence)
                     .language(language)
                     .sex(sex)
-                    .isAudio(false)
-                    .build();
-        }
-    }
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    @ToString
-    public static class AudioSaveRequest {
-        private String audioName;
-
-        public Project toEntity(){
-            return Project.builder()
-                    .text("음성업로드입니다")
-                    .pitch(-99L)
-                    .speed(-99L)
-                    .durationSilence(-99L)
-                    .language("음성업로드입니다")
-                    .sex("음성업로드입니다.")
                     .audioName(audioName)
-                    .isAudio(true)
+                    .isAudio(isAudio)
                     .build();
         }
     }
