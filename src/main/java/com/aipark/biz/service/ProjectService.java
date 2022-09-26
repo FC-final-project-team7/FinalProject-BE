@@ -48,4 +48,26 @@ public class ProjectService {
 
         return ProjectDto.AudioResponse.of(project);
     }
+
+    @Transactional(readOnly = true)
+    public ProjectDto.BasicDto getProject(Long projectId) {
+        Project project = projectRepository.findById(projectId).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 프로젝트가 없습니다."));
+
+        boolean isMember = checkMember(project.getMember().getUsername());
+
+        if (!isMember) {
+            throw new RuntimeException("잘못된 접근입니다.");
+        }
+
+        return project.createBasicDto();
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkMember(String projectUsername) {
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 멤버가 없습니다."));
+
+        return member.getUsername().equals(projectUsername);
+    }
 }
