@@ -1,6 +1,7 @@
 package com.aipark.biz.domain.project;
 
 import com.aipark.biz.domain.member.Member;
+import com.aipark.web.dto.ProjectDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -91,5 +92,26 @@ public class Project {
                 .background("")
                 .build();
 
+    }
+
+    public ProjectDto.BasicDto createBasicDto() {
+        return ProjectDto.BasicDto.builder()
+                .projectId(id)
+                .projectName(projectName)
+                .avatarAudio(avatarAudio)
+                .sex(sex)
+                .language(language)
+                .durationSilence(durationSilence)
+                .pitch(pitch)
+                .speed(speed)
+                .text(text)
+                .audio(audio)
+                .isAudio(isAudio)
+                .avatar(avatar)
+                .category1(category1)
+                .category2(category2)
+                .category3(category3)
+                .background(background)
+                .build();
     }
 }
