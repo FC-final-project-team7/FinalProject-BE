@@ -28,7 +28,7 @@ public class Project {
     private Double speed;
     private String text;
     private String audio;
-    private boolean isAudio;
+    private Boolean isAudio;
     private String avatar;
     private String category1;
     private String category2;
@@ -73,7 +73,7 @@ public class Project {
         }
     }
 
-    public Project defaultCreate(){
+    public static Project defaultCreate(){
         return Project.builder()
                 .projectName("")
                 .avatarAudio("")
@@ -92,6 +92,24 @@ public class Project {
                 .background("")
                 .build();
 
+    }
+
+    public void updateProject(ProjectDto.BasicDto requestDto) {
+        this.projectName = requestDto.getProjectName();
+        this.avatarAudio = requestDto.getAvatarAudio();
+        this.sex = requestDto.getSex();
+        this.language = requestDto.getLanguage();
+        this.durationSilence = requestDto.getDurationSilence();
+        this.pitch = requestDto.getPitch();
+        this.speed = requestDto.getSpeed();
+        this.text = requestDto.getText();
+        this.audio = requestDto.getAudio();
+        this.isAudio = requestDto.getIsAudio();
+        this.avatar = requestDto.getAvatar();
+        this.category1 = requestDto.getCategory1();
+        this.category2 = requestDto.getCategory2();
+        this.category3 = requestDto.getCategory3();
+        this.background = requestDto.getBackground();
     }
 
     public ProjectDto.BasicDto createBasicDto() {

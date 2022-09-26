@@ -57,7 +57,7 @@ public class ProjectDto {
         private Double speed;
         private String text;
         private String audio;
-        private boolean isAudio;
+        private Boolean isAudio;
         private String avatar;
         private String category1;
         private String category2;

@@ -24,6 +24,11 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.textSave());
     }
 
+    @PostMapping("/auto")
+    public void projectUpdate(@RequestBody ProjectDto.BasicDto requestDto){
+        projectService.textAutoSave(requestDto);
+    }
+
     /**
      * 음성 업로드로 프로젝트 만들 때
      * @RequestBody audioName(음성 업로드 이름)
