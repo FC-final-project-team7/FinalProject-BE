@@ -2,6 +2,7 @@ package com.aipark.web.controller;
 
 import com.aipark.biz.service.ProjectService;
 import com.aipark.web.dto.ProjectDto;
+import com.aipark.web.dto.PythonServerDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -64,7 +65,7 @@ public class ProjectController {
     }
 
     /**
-     * 프로젝트 리스트에서 프로젝트 하나를 요청할 때 사용한다.
+     * 프로젝트 리스트에서 프로젝트 하나를 요청할 때
      * @RequestBody project_id(프로젝트 기본키 값)
      * @return
      */
@@ -74,7 +75,7 @@ public class ProjectController {
     }
 
     /**
-     * 프로젝트 리스트에서 프로젝트 하나를 삭제할 때 사용한다.
+     * 프로젝트 리스트에서 프로젝트 하나를 삭제할 때
      * @RequestBody project_id(프로젝트 기본키 값)
      * @return
      */
@@ -82,5 +83,15 @@ public class ProjectController {
     public ResponseEntity deleteProject(@PathVariable Long projectId) {
         projectService.deleteProject(projectId);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    /**
+     * 텍스트 입력 페이지에서 텍스트 수정 페이지로 넘어갈 때
+     * @RequestBody
+     * @return
+     */
+    @PutMapping("/edit")
+    public ResponseEntity<PythonServerDto.CreateAudioResponse> modifyText() {
+        return ResponseEntity.ok(projectService.TextModificationPage());
     }
 }
