@@ -3,7 +3,27 @@ package com.aipark.web.dto;
 import com.aipark.biz.domain.project.Project;
 import lombok.*;
 
+import java.util.List;
+
 public class ProjectDto {
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class ProjectAutoRequest{
+        private Long projectId;
+        private String projectName;
+        private String avatarAudio;
+        private String sex;
+        private String language;
+        private Double durationSilence;
+        private Double pitch;
+        private Double speed;
+        private String text;
+        private String audio;
+        private Boolean isAudio;
+    }
 
     @Getter
     @NoArgsConstructor
@@ -16,14 +36,17 @@ public class ProjectDto {
         private Double durationSilence;
         private String language;
         private String sex;
+        private String avatarAudio;
 
         public static TextResponse of(Project project){
             return TextResponse.builder()
                     .text(project.getText())
                     .pitch(project.getPitch())
-                    .speed(project.getDurationSilence())
+                    .speed(project.getSpeed())
+                    .durationSilence(project.getDurationSilence())
                     .language(project.getLanguage())
                     .sex(project.getSex())
+                    .avatarAudio(project.getAvatarAudio())
                     .build();
         }
     }
@@ -42,10 +65,9 @@ public class ProjectDto {
     }
 
     @Getter
-    @NoArgsConstructor
     @AllArgsConstructor
+    @NoArgsConstructor
     @Builder
-    @ToString
     public static class BasicDto {
         private Long projectId;
         private String projectName;
@@ -63,6 +85,26 @@ public class ProjectDto {
         private String category2;
         private String category3;
         private String background;
+
+        @Builder
+        public BasicDto(Project project) {
+            this.projectId = project.getId();
+            this.projectName = project.getProjectName();
+            this.avatarAudio = project.getAvatarAudio();
+            this.sex = project.getSex();
+            this.language = project.getLanguage();
+            this.durationSilence = project.getDurationSilence();
+            this.pitch = project.getPitch();
+            this.speed = project.getSpeed();
+            this.text = project.getText();
+            this.audio = project.getAudio();
+            this.isAudio = project.getIsAudio();
+            this.avatar = project.getAvatar();
+            this.category1 = project.getCategory1();
+            this.category2 = project.getCategory2();
+            this.category3 = project.getCategory3();
+            this.background = project.getBackground();
+        }
 
         public Project toEntity(){
             return Project.builder()

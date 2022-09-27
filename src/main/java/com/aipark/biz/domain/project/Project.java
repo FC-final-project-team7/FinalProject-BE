@@ -94,7 +94,7 @@ public class Project {
 
     }
 
-    public void updateProject(ProjectDto.BasicDto requestDto) {
+    public void updateProject(ProjectDto.ProjectAutoRequest requestDto) {
         this.projectName = requestDto.getProjectName();
         this.avatarAudio = requestDto.getAvatarAudio();
         this.sex = requestDto.getSex();
@@ -105,10 +105,26 @@ public class Project {
         this.text = requestDto.getText();
         this.audio = requestDto.getAudio();
         this.isAudio = requestDto.getIsAudio();
-        this.avatar = requestDto.getAvatar();
-        this.category1 = requestDto.getCategory1();
-        this.category2 = requestDto.getCategory2();
-        this.category3 = requestDto.getCategory3();
-        this.background = requestDto.getBackground();
+    }
+
+    public ProjectDto.BasicDto createBasicDto() {
+        return ProjectDto.BasicDto.builder()
+                .projectId(id)
+                .projectName(projectName)
+                .avatarAudio(avatarAudio)
+                .sex(sex)
+                .language(language)
+                .durationSilence(durationSilence)
+                .pitch(pitch)
+                .speed(speed)
+                .text(text)
+                .audio(audio)
+                .isAudio(isAudio)
+                .avatar(avatar)
+                .category1(category1)
+                .category2(category2)
+                .category3(category3)
+                .background(background)
+                .build();
     }
 }
