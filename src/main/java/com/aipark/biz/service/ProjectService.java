@@ -5,11 +5,10 @@ import com.aipark.biz.domain.member.MemberRepository;
 import com.aipark.biz.domain.project.Project;
 import com.aipark.biz.domain.project.ProjectRepository;
 import com.aipark.config.SecurityUtil;
-import com.aipark.exception.MemberErrorResult;
-import com.aipark.exception.MemberException;
-import com.aipark.exception.ProjectErrorResult;
-import com.aipark.exception.ProjectException;
+import com.aipark.exception.*;
 import com.aipark.web.dto.ProjectDto;
+import com.aipark.web.dto.PythonServerDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
+    private final PythonServerConnectionService pythonServerConnectionService;
 
     @Transactional
     public ProjectDto.TextResponse textSave() {
@@ -94,5 +94,17 @@ public class ProjectService {
                 .stream()
                 .map(ProjectDto.BasicDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public PythonServerDto.CreateAudioResponse TextModificationPage(String text) {
+        PythonServerDto.CreateAudioResponse response;
+
+        try {
+            response = pythonServerConnectionService.createSentenceAudioFile(text);
+        } catch (JsonProcessingException e) {
+            throw new PythonServerException(PythonServerErrorResult.JSON_MAPPING_ERROR);
+        }
+
+        return response;
     }
 }
