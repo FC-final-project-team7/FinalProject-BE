@@ -1,12 +1,14 @@
 package com.aipark.web.controller;
 
 import com.aipark.biz.service.ProjectService;
+import com.aipark.biz.service.PythonServerConnectionService;
 import com.aipark.web.dto.ProjectDto;
 import com.aipark.web.dto.PythonServerDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -91,7 +93,8 @@ public class ProjectController {
      * @return
      */
     @PutMapping("/edit")
-    public ResponseEntity<PythonServerDto.CreateAudioResponse> modifyText() {
-        return ResponseEntity.ok(projectService.TextModificationPage());
+    public ResponseEntity<PythonServerDto.CreateAudioResponse> modifyText(@RequestBody ProjectDto.ProjectAutoRequest requestDto) {
+        projectService.textAutoSave(requestDto);
+        return ResponseEntity.ok(projectService.TextModificationPage(requestDto.getText()));
     }
 }
