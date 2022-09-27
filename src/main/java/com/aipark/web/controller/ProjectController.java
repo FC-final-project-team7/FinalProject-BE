@@ -28,7 +28,7 @@ public class ProjectController {
     }
 
     @PostMapping("/auto")
-    public void projectUpdate(@RequestBody ProjectDto.BasicDto requestDto){
+    public void projectUpdate(@RequestBody ProjectDto.ProjectAutoRequest requestDto){
         projectService.textAutoSave(requestDto);
     }
 
