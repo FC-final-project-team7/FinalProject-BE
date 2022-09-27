@@ -106,4 +106,25 @@ public class Project {
         this.audio = requestDto.getAudio();
         this.isAudio = requestDto.getIsAudio();
     }
+
+    public ProjectDto.BasicDto createBasicDto() {
+        return ProjectDto.BasicDto.builder()
+                .projectId(id)
+                .projectName(projectName)
+                .avatarAudio(avatarAudio)
+                .sex(sex)
+                .language(language)
+                .durationSilence(durationSilence)
+                .pitch(pitch)
+                .speed(speed)
+                .text(text)
+                .audio(audio)
+                .isAudio(isAudio)
+                .avatar(avatar)
+                .category1(category1)
+                .category2(category2)
+                .category3(category3)
+                .background(background)
+                .build();
+    }
 }

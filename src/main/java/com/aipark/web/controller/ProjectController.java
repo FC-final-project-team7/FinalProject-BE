@@ -4,6 +4,7 @@ import com.aipark.biz.service.ProjectService;
 import com.aipark.web.dto.ProjectDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,5 +39,26 @@ public class ProjectController {
     public ResponseEntity<ProjectDto.AudioResponse> projectAudio(){
         return ResponseEntity.ok(projectService.audioSave());
 
+    }
+
+    /**
+     * 프로젝트 리스트에서 프로젝트 하나를 요청할 때 사용한다.
+     * @RequestBody project_id(프로젝트 기본키 값)
+     * @return
+     */
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ProjectDto.BasicDto> getProject(@PathVariable Long projectId) {
+        return ResponseEntity.ok(projectService.getProject(projectId));
+    }
+
+    /**
+     * 프로젝트 리스트에서 프로젝트 하나를 삭제할 때 사용한다.
+     * @RequestBody project_id(프로젝트 기본키 값)
+     * @return
+     */
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity deleteProject(@PathVariable Long projectId) {
+        projectService.deleteProject(projectId);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }
