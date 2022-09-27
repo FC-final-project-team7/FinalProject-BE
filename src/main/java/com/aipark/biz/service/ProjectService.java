@@ -41,7 +41,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public void textAutoSave(ProjectDto.BasicDto requestDto){
+    public void textAutoSave(ProjectDto.ProjectAutoRequest requestDto){
         Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
                 () -> new RuntimeException("해당 프로젝트를 찾지 못하였습니다"));
 
