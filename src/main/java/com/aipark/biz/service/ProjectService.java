@@ -51,7 +51,7 @@ public class ProjectService {
     @Transactional
     public ProjectDto.AudioResponse audioSave() {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
-                () -> new IllegalArgumentException("해당하는 멤버가 없습니다."));
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
 
         Project project = Project.builder().isAudio(true).build();
         member.addProject(project);
@@ -64,12 +64,10 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public ProjectDto.BasicDto getProject(Long projectId) {
         Project project = projectRepository.findById(projectId).orElseThrow(
-                () -> new IllegalArgumentException("해당하는 프로젝트가 없습니다."));
+                () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
-        boolean isMember = checkMember(project.getMember().getUsername());
-
-        if (!isMember) {
-            throw new RuntimeException("잘못된 접근입니다.");
+        if (!checkMember(project.getMember().getUsername())) {
+            throw new MemberException(MemberErrorResult.MEMBER_INCORRECT);
         }
 
         return project.createBasicDto();
@@ -83,7 +81,7 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public boolean checkMember(String projectUsername) {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
-                () -> new IllegalArgumentException("해당하는 멤버가 없습니다."));
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
 
         return member.getUsername().equals(projectUsername);
     }
