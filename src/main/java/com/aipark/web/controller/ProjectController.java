@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -25,9 +27,29 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.textSave());
     }
 
+    /**
+     * 텍스트 입력에서 자동저장
+     * @RequestBody 자동저장을 위한 데이터(
+     *         projectId        : 프로젝트 고유 id
+     *         projectName      : 프로젝트 이름
+     *         avatarAudio      : 아바타 음성
+     *         sex              : 성별
+     *         language         : 언어
+     *         durationSilence  : 간격
+     *         pitch            : 음성 톤
+     *         speed            : 음성 속도
+     *         text             : 텍스트
+     *         audio            :
+     *         isAudio;         : 음성 업로드 유/무
+     * @return projectDto
+     */
     @PostMapping("/auto")
-    public void projectAutoUpdate(@RequestBody ProjectDto.ProjectAutoRequest requestDto){
-        projectService.textAutoSave(requestDto);
+    public ResponseEntity<ProjectDto.TextResponse> projectAutoUpdate(@RequestBody ProjectDto.ProjectAutoRequest requestDto){
+        return ResponseEntity.ok(projectService.textAutoSave(requestDto));
+    }
+    @GetMapping
+    public ResponseEntity<List<ProjectDto.BasicDto>> getProjectList(){
+        return ResponseEntity.ok(projectService.getProjectList());
     }
 
     /**

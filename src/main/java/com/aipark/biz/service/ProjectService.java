@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,11 +42,13 @@ public class ProjectService {
     }
 
     @Transactional
-    public void textAutoSave(ProjectDto.ProjectAutoRequest requestDto){
+    public ProjectDto.TextResponse textAutoSave(ProjectDto.ProjectAutoRequest requestDto){
         Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
         project.updateProject(requestDto);
+
+        return ProjectDto.TextResponse.of(project);
     }
 
     @Transactional
@@ -84,5 +87,12 @@ public class ProjectService {
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
 
         return member.getUsername().equals(projectUsername);
+    }
+
+    public List<ProjectDto.BasicDto> getProjectList() {
+        return projectRepository.findAll()
+                .stream()
+                .map(ProjectDto.BasicDto::new)
+                .collect(Collectors.toList());
     }
 }
