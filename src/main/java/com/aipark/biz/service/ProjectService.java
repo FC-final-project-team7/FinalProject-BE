@@ -5,11 +5,19 @@ import com.aipark.biz.domain.member.MemberRepository;
 import com.aipark.biz.domain.project.Project;
 import com.aipark.biz.domain.project.ProjectRepository;
 import com.aipark.config.SecurityUtil;
+import com.aipark.exception.MemberErrorResult;
+import com.aipark.exception.MemberException;
+import com.aipark.exception.ProjectErrorResult;
+import com.aipark.exception.ProjectException;
 import com.aipark.web.dto.ProjectDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ProjectService {
@@ -19,8 +27,12 @@ public class ProjectService {
     @Transactional
     public ProjectDto.TextResponse textSave() {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
-                () -> new IllegalArgumentException("해당하는 멤버가 없습니다."));
-
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
+        if(member.getProjectList().size()==5){
+            List<Project> projects = projectRepository.findAllAsc(member);
+            member.getProjectList().remove(projects.get(0));
+            projectRepository.delete(projects.get(0));
+        }
         Project project = Project.defaultCreate();
         member.addProject(project);
 
