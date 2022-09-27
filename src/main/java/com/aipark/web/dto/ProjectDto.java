@@ -34,14 +34,17 @@ public class ProjectDto {
         private Double durationSilence;
         private String language;
         private String sex;
+        private String avatarAudio;
 
         public static TextResponse of(Project project){
             return TextResponse.builder()
                     .text(project.getText())
                     .pitch(project.getPitch())
-                    .speed(project.getDurationSilence())
+                    .speed(project.getSpeed())
+                    .durationSilence(project.getDurationSilence())
                     .language(project.getLanguage())
                     .sex(project.getSex())
+                    .avatarAudio(project.getAvatarAudio())
                     .build();
         }
     }
