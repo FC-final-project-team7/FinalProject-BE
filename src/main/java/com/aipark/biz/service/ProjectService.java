@@ -63,6 +63,11 @@ public class ProjectService {
         return project.createBasicDto();
     }
 
+    @Transactional
+    public void deleteProject(Long projectId) {
+        projectRepository.deleteById(projectId);
+    }
+
     @Transactional(readOnly = true)
     public boolean checkMember(String projectUsername) {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
