@@ -9,6 +9,24 @@ public class ProjectDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
+    public static class ProjectAutoRequest{
+        private Long projectId;
+        private String projectName;
+        private String avatarAudio;
+        private String sex;
+        private String language;
+        private Double durationSilence;
+        private Double pitch;
+        private Double speed;
+        private String text;
+        private String audio;
+        private Boolean isAudio;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class TextResponse {
         private String text;
         private Double pitch;
