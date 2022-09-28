@@ -1,5 +1,7 @@
 package com.aipark.web.dto;
 
+import com.aipark.biz.domain.project.Project;
+import com.aipark.biz.domain.tempAudio.TempAudio;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +19,7 @@ public class PythonServerDto {
         private String username;
         private String narration;
         private String text;
+        private Long projectId;
     }
 
     @Getter
@@ -26,6 +29,13 @@ public class PythonServerDto {
     public static class CreateAudioResponse{
         private String status;
         private List<String> url;
+
+        public static TempAudio toEntity(Project project, String sentence) {
+            return TempAudio.builder()
+                    .project(project)
+                    .tempUrl(sentence)
+                    .build();
+        }
     }
 
 }
