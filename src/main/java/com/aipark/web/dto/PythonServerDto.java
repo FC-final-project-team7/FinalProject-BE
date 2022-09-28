@@ -13,6 +13,16 @@ public class PythonServerDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
+    public static class CreateAudioRequest{
+        private String username;
+        private String narration;
+        private String text;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class CreateAudioResponse{
         private String status;
         private List<String> url;
