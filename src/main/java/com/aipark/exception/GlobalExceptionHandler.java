@@ -30,6 +30,16 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler(PythonServerException.class)
+    public ResponseEntity<ErrorResponse> pythonServerException(PythonServerException pythonServerException){
+        PythonServerErrorResult errorResult = pythonServerException.getPythonServerErrorResult();
+        return ResponseEntity.status(errorResult.getHttpStatus()).body(
+                ErrorResponse.builder()
+                        .code(errorResult.getHttpStatus().name())
+                        .message(errorResult.getMessage())
+                        .build());
+    }
+
     @Getter
     @Builder
     static class ErrorResponse{
