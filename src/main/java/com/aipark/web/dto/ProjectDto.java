@@ -3,6 +3,8 @@ package com.aipark.web.dto;
 import com.aipark.biz.domain.project.Project;
 import lombok.*;
 
+import java.util.List;
+
 public class ProjectDto {
 
     @Getter
@@ -132,5 +134,23 @@ public class ProjectDto {
                     .background(background)
                     .build();
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class ModificationPageResponse {
+        private Long projectId;
+        private String text;
+        private String audio;
+        private List<Sentence> sentence;
+    }
+
+    @Getter
+    @Builder
+    public static class Sentence {
+        private String sentence;
+        private String sentenceAudio;
     }
 }
