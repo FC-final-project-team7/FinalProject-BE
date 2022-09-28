@@ -3,8 +3,6 @@ package com.aipark.web.dto;
 import com.aipark.biz.domain.project.Project;
 import lombok.*;
 
-import java.util.List;
-
 public class ProjectDto {
 
     @Getter
@@ -23,6 +21,14 @@ public class ProjectDto {
         private String text;
         private String audio;
         private Boolean isAudio;
+
+        public PythonServerDto.CreateAudioRequest toCreateAudioRequest(String username) {
+            return PythonServerDto.CreateAudioRequest.builder()
+                    .username(username)
+                    .narration("none")
+                    .text(text)
+                    .build();
+        }
     }
 
     @Getter
