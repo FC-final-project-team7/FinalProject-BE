@@ -27,6 +27,7 @@ public class ProjectDto {
                     .username(username)
                     .narration("none")
                     .text(text)
+                    .projectId(projectId)
                     .build();
         }
     }
