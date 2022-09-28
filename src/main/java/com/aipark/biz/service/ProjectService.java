@@ -5,10 +5,12 @@ import com.aipark.biz.domain.member.MemberRepository;
 import com.aipark.biz.domain.project.Project;
 import com.aipark.biz.domain.project.ProjectRepository;
 import com.aipark.config.SecurityUtil;
-import com.aipark.exception.*;
+import com.aipark.exception.MemberErrorResult;
+import com.aipark.exception.MemberException;
+import com.aipark.exception.ProjectErrorResult;
+import com.aipark.exception.ProjectException;
 import com.aipark.web.dto.ProjectDto;
 import com.aipark.web.dto.PythonServerDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
-    private final PythonServerConnectionService pythonServerConnectionService;
+    private final PythonServerService pythonServerService;
 
     @Transactional
     public ProjectDto.TextResponse textSave() {
@@ -96,14 +98,13 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
-    public PythonServerDto.CreateAudioResponse TextModificationPage(String text) {
-        PythonServerDto.CreateAudioResponse response;
+    public ProjectDto.ModificationPageResponse TextModificationPage(ProjectDto.ProjectAutoRequest requestDto) {
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
 
-        try {
-            response = pythonServerConnectionService.createSentenceAudioFile(text);
-        } catch (JsonProcessingException e) {
-            throw new PythonServerException(PythonServerErrorResult.JSON_MAPPING_ERROR);
-        }
+        PythonServerDto.CreateAudioRequest request = requestDto.toCreateAudioRequest(member.getUsername());
+
+        ProjectDto.ModificationPageResponse response = pythonServerService.createSentenceAudioFile(request);
 
         return response;
     }
