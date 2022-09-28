@@ -58,7 +58,7 @@ public class SecurityConfig {
                         , "/webjars/**"
                         , "/swagger/**"
                         , "/favicon.ico"
-                        ,"/members/check-id"
+                        , "/members/check-id"
                 ).permitAll()
                 .anyRequest().authenticated()
 
