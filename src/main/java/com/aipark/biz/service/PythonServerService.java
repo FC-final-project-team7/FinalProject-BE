@@ -46,7 +46,7 @@ public class PythonServerService {
         jsonObject.put("text", sentences);
         jsonObject.put("narration", request.getNarration());
 
-        HttpEntity<JSONObject> requestMessage = new HttpEntity<>(jsonObject, headers);
+        HttpEntity<String> requestMessage = new HttpEntity<>(jsonObject.toString(), headers);
 
         ResponseEntity<PythonServerDto.CreateAudioResponse> responseEntity = restTemplate.postForEntity(url, requestMessage, PythonServerDto.CreateAudioResponse.class);
 
@@ -70,8 +70,7 @@ public class PythonServerService {
         Project project = projectRepository.findById(projectId).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
-        List<PythonServerDto.SentenceAndUrl> sentenceAndUrl = response.getSentenceAndUrl();
-        for (PythonServerDto.SentenceAndUrl s : sentenceAndUrl) {
+        for (PythonServerDto.SentenceAndUrl s : response.getUrl()) {
             tempAudioRepository.save(PythonServerDto.CreateAudioResponse.toEntity(project, s.getUrl()));
         }
     }
@@ -79,13 +78,10 @@ public class PythonServerService {
     public ProjectDto.ModificationPageResponse createDto(PythonServerDto.CreateAudioRequest request, PythonServerDto.CreateAudioResponse response) {
         ProjectDto.ModificationPageResponse mpr = ProjectDto.ModificationPageResponse.of(request);
 
-        for (PythonServerDto.SentenceAndUrl s : response.getSentenceAndUrl()) {
-            mpr.setSentenceList(ProjectDto.Sentence.builder()
-                    .sentence(s.getSentence())
-                    .sentenceAudio(s.getUrl())
-                    .build());
+        for (PythonServerDto.SentenceAndUrl s : response.getUrl()) {
+            ProjectDto.Sentence sentence = s.createSentence();
+            mpr.setSentenceList(sentence);
         }
-
         return mpr;
     }
 }

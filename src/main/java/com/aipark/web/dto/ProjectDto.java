@@ -2,7 +2,9 @@ package com.aipark.web.dto;
 
 import com.aipark.biz.domain.project.Project;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectDto {
@@ -150,11 +152,13 @@ public class ProjectDto {
             return ModificationPageResponse.builder()
                     .projectId(request.getProjectId())
                     .text(request.getText())
+                    .audio("")
+                    .sentenceList(new ArrayList<>())
                     .build();
         }
 
         public void setSentenceList(ProjectDto.Sentence sentence) {
-            this.sentenceList.add(sentence);
+            sentenceList.add(sentence);
         }
     }
 
