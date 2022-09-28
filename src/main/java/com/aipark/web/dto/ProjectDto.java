@@ -144,7 +144,18 @@ public class ProjectDto {
         private Long projectId;
         private String text;
         private String audio;
-        private List<Sentence> sentence;
+        private List<Sentence> sentenceList;
+
+        public static ModificationPageResponse of(PythonServerDto.CreateAudioRequest request) {
+            return ModificationPageResponse.builder()
+                    .projectId(request.getProjectId())
+                    .text(request.getText())
+                    .build();
+        }
+
+        public void setSentenceList(ProjectDto.Sentence sentence) {
+            this.sentenceList.add(sentence);
+        }
     }
 
     @Getter

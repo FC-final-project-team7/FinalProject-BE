@@ -15,7 +15,7 @@ public class PythonServerDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class CreateAudioRequest{
+    public static class CreateAudioRequest {
         private String username;
         private String narration;
         private String text;
@@ -26,9 +26,9 @@ public class PythonServerDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class CreateAudioResponse{
+    public static class CreateAudioResponse {
         private String status;
-        private List<String> url;
+        private List<SentenceAndUrl> sentenceAndUrl;
 
         public static TempAudio toEntity(Project project, String sentence) {
             return TempAudio.builder()
@@ -36,6 +36,13 @@ public class PythonServerDto {
                     .tempUrl(sentence)
                     .build();
         }
+    }
+
+    @Getter
+    @Builder
+    public static class SentenceAndUrl {
+        private String sentence;
+        private String url;
     }
 
 }
