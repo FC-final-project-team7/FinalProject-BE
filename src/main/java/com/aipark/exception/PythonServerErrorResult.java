@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum PythonServerErrorResult {
 
-    JSON_MAPPING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "다시 요청해주세요.");
+    AUDIO_CREATE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "다시 요청해주세요.");
 
     private final HttpStatus httpStatus;
     private final String message;
