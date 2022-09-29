@@ -28,6 +28,7 @@ public class Project {
     private Double speed;
     private String text;
     private String audio;
+    private String audio_uuid;
     private Boolean isAudio;
     private String avatar;
     private String category1;
@@ -42,7 +43,7 @@ public class Project {
 
     @Builder
     public Project(Long id,String projectName, String avatarAudio, String sex, String language, Double durationSilence,
-                   Double pitch, Double speed, String text, String audio, boolean isAudio, String avatar,
+                   Double pitch, Double speed, String text, String audio, String audio_uuid,boolean isAudio, String avatar,
                    String category1, String category2, String category3, String background, Member member) {
         this.id = id;
         this.projectName = projectName;
@@ -54,6 +55,7 @@ public class Project {
         this.speed = speed;
         this.text = text;
         this.audio = audio;
+        this.audio_uuid = audio_uuid;
         this.isAudio = isAudio;
         this.avatar = avatar;
         this.category1 = category1;
@@ -72,8 +74,8 @@ public class Project {
             this.member.addProject(this);
         }
     }
-
-    public static Project defaultCreate(){
+    // (텍스트로프로젝트 생성 시) 생성하는 코드
+    public static Project defaultCreate_text(){
         return Project.builder()
                 .projectName("")
                 .avatarAudio("")
@@ -84,7 +86,30 @@ public class Project {
                 .speed(1.0)
                 .text("")
                 .audio("")
+                .audio_uuid("")
                 .isAudio(false)
+                .avatar("")
+                .category1("")
+                .category2("")
+                .category3("")
+                .background("")
+                .build();
+
+    }
+
+    public static Project defaultCreate_audio(String audio, String audio_uuid){
+        return Project.builder()
+                .projectName("")
+                .avatarAudio("")
+                .sex("")
+                .language("")
+                .durationSilence(-1.0)
+                .pitch(-1.0)
+                .speed(-1.0)
+                .text("")
+                .audio(audio)
+                .audio_uuid(audio_uuid)
+                .isAudio(true)
                 .avatar("")
                 .category1("")
                 .category2("")
