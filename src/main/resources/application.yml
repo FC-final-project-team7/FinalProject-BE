@@ -18,6 +18,7 @@ spring:
       - classpath:/application-db.yml
       - classpath:/application-jwt.yml
       - classpath:/application-oauth.yml
+      - classpath:/application-aws.yml
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -54,13 +55,12 @@ public class ProjectController {
 
     /**
      * 음성 업로드로 프로젝트 만들 때
-     * @RequestBody audioName(음성 업로드 이름)
+     * @RequestBody projectId(프로젝트 id)
      * @return
      */
     @PostMapping("/audio")
-    public ResponseEntity<ProjectDto.AudioResponse> projectAudio(){
-        return ResponseEntity.ok(projectService.audioSave());
-
+    public ResponseEntity<ProjectDto.AudioResponse> projectAudio(@ModelAttribute ProjectDto.AudioRequest audioRequest) throws IOException {
+        return ResponseEntity.ok(projectService.audioSave(audioRequest));
     }
 
     /**
