@@ -2,8 +2,7 @@ package com.aipark.web.dto;
 
 import com.aipark.biz.domain.project.Project;
 import lombok.*;
-
-import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 public class ProjectDto {
 
@@ -55,11 +54,11 @@ public class ProjectDto {
     @AllArgsConstructor
     @Builder
     public static class AudioResponse {
-        private String audioName;
+        private Long projectId;
 
         public static AudioResponse of(Project project){
             return AudioResponse.builder()
-                    .audioName(project.getAudio())
+                    .projectId(project.getId())
                     .build();
         }
     }
@@ -125,5 +124,20 @@ public class ProjectDto {
                     .background(background)
                     .build();
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class AudioRequest {
+        private MultipartFile audioFile;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class UploadFileDto {
+        // 유저가 업로드하는 파일명
+        private String uploadFileName;
+        // S3 에 저장될 파일명
+        private String storeFileName;
     }
 }
