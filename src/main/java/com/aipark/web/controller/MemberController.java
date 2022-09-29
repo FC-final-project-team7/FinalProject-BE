@@ -3,10 +3,12 @@ package com.aipark.web.controller;
 import com.aipark.biz.service.MemberService;
 import com.aipark.web.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/members")
@@ -18,11 +20,32 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getMyInfo());
     }
 
-    @PostMapping("/edit")
+    @PutMapping
     public ResponseEntity<String> changePassword(@RequestBody MemberDto.ChangeRequest changeRequestDto){
         memberService.changePassword(changeRequestDto);
-        return ResponseEntity.ok("비밀번호 성공하셨습니다.");
+        return ResponseEntity.ok("비밀번호 변경 성공하셨습니다.");
     }
+
+    @PostMapping("/find-id")
+    public ResponseEntity<String> findId(@RequestBody MemberDto.FindIdRequest requestDto){
+        log.info("아이디 조회 : {}",requestDto.toString());
+
+        return ResponseEntity.ok("이메일로 아이디를 보냈습니당");
+    }
+
+    @PostMapping("/find-pwd")
+    public ResponseEntity<String> findPwd(@RequestBody MemberDto.FindPwdRequest requestDto){
+        memberService.findPwd(requestDto);
+        return ResponseEntity.ok("회원이 존재합니다");
+    }
+
+    @PostMapping("/edit-pwd")
+    public ResponseEntity<String> editPwd(@RequestBody MemberDto.EditPwdRequest requestDto){
+        memberService.editPwd(requestDto);
+
+        return ResponseEntity.ok("비밀번호 변경되었습니다.");
+    }
+
 
     @DeleteMapping
     public ResponseEntity<String> memberDrop(){
