@@ -77,8 +77,8 @@ public class Project {
     // (텍스트로프로젝트 생성 시) 생성하는 코드
     public static Project defaultCreate_text(){
         return Project.builder()
-                .projectName("")
-                .avatarAudio("")
+                .projectName("임시프로젝트명")
+                .avatarAudio("kor_w_1.wav")
                 .sex("MALE")
                 .language("korean")
                 .durationSilence(0.5)
@@ -88,18 +88,18 @@ public class Project {
                 .audio("")
                 .audio_uuid("")
                 .isAudio(false)
-                .avatar("")
-                .category1("")
-                .category2("")
-                .category3("")
-                .background("")
+                .avatar("AVATAR1.png")
+                .category1("1-1-1.png")
+                .category2("1-2-1.png")
+                .category3("1-3-1.png")
+                .background("BG_0.png")
                 .build();
 
     }
 
     public static Project defaultCreate_audio(String audio, String audio_uuid){
         return Project.builder()
-                .projectName("")
+                .projectName("임시프로젝트명")
                 .avatarAudio("")
                 .sex("")
                 .language("")
@@ -110,11 +110,11 @@ public class Project {
                 .audio(audio)
                 .audio_uuid(audio_uuid)
                 .isAudio(true)
-                .avatar("")
-                .category1("")
-                .category2("")
-                .category3("")
-                .background("")
+                .avatar("AVATAR1.png")
+                .category1("1-1-1.png")
+                .category2("1-2-1.png")
+                .category3("1-3-1.png")
+                .background("BG_0.png")
                 .build();
 
     }
