@@ -50,6 +50,10 @@ dependencies {
     // swagger
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
     implementation 'io.springfox:springfox-swagger2:2.9.2'
+
+    // JSON
+    implementation group: 'org.json', name: 'json', version: '20220320'
+
 }
 
 tasks.named('test') {
