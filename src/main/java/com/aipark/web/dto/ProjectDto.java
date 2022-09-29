@@ -182,4 +182,13 @@ public class ProjectDto {
         private String sentence;
         private String sentenceAudio;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class TextAutoSave {
+        private Long projectId;
+        private String text;
+    }
 }
