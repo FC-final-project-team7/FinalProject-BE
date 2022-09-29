@@ -151,7 +151,10 @@ public class ProjectDto {
         private String uploadFileName;
         // S3 에 저장될 파일명
         private String storeFileName;
+    }
 
+    @Getter
+    @AllArgsConstructor
     @NoArgsConstructor
     @Builder
     public static class ModificationPageResponse {
@@ -168,7 +171,6 @@ public class ProjectDto {
                     .sentenceList(new ArrayList<>())
                     .build();
         }
-
         public void setSentenceList(ProjectDto.Sentence sentence) {
             sentenceList.add(sentence);
         }
