@@ -10,11 +10,14 @@ import com.aipark.exception.MemberException;
 import com.aipark.exception.ProjectErrorResult;
 import com.aipark.exception.ProjectException;
 import com.aipark.web.dto.ProjectDto;
+import com.aipark.biz.service.file.FileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
+    private final FileStore fileStore;
 
     @Transactional
     public ProjectDto.TextResponse textSave() {
@@ -34,7 +38,7 @@ public class ProjectService {
             member.getProjectList().remove(projects.get(0));
             projectRepository.delete(projects.get(0));
         }
-        Project project = Project.defaultCreate();
+        Project project = Project.defaultCreate_text();
         member.addProject(project);
 
         projectRepository.save(project);
@@ -52,18 +56,22 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectDto.AudioResponse audioSave() {
+    public ProjectDto.AudioResponse audioSave(ProjectDto.AudioRequest audioRequest) throws IOException {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
+        
+        MultipartFile audioFile = audioRequest.getAudioFile();
+        ProjectDto.UploadFileDto uploadFileDto = fileStore.storeFile(audioFile);
+        // 클라이언트로부터 프로젝트 ID 값을 받아와서 DB 에서 프로젝트를 조회하고
+        // 해당하는 프로젝트의 audio 와 audio_uuid 에 값을 넣어줌
+        Project project = Project.defaultCreate_audio(uploadFileDto.getUploadFileName(), uploadFileDto.getStoreFileName());
 
-        Project project = Project.builder().isAudio(true).build();
         member.addProject(project);
 
-        projectRepository.save(project);
+        Project save = projectRepository.save(project);
+        return ProjectDto.AudioResponse.of(save);
 
-        return ProjectDto.AudioResponse.of(project);
     }
-
     @Transactional(readOnly = true)
     public ProjectDto.BasicDto getProject(Long projectId) {
         Project project = projectRepository.findById(projectId).orElseThrow(
