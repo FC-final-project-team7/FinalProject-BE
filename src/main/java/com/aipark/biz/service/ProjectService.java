@@ -11,6 +11,7 @@ import com.aipark.exception.ProjectErrorResult;
 import com.aipark.exception.ProjectException;
 import com.aipark.web.dto.ProjectDto;
 import com.aipark.biz.service.file.FileStore;
+import com.aipark.web.dto.PythonServerDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
+    private final PythonServerService pythonServerService;
 
     @Transactional
     public ProjectDto.TextResponse textSave() {
@@ -102,5 +104,16 @@ public class ProjectService {
                 .stream()
                 .map(ProjectDto.BasicDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public ProjectDto.ModificationPageResponse TextModificationPage(ProjectDto.ProjectAutoRequest requestDto) {
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
+
+        PythonServerDto.CreateAudioRequest request = requestDto.toCreateAudioRequest(member.getUsername());
+
+        ProjectDto.ModificationPageResponse response = pythonServerService.createSentenceAudioFile(request);
+
+        return response;
     }
 }

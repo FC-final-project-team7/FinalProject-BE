@@ -3,6 +3,9 @@ package com.aipark.web.dto;
 import com.aipark.biz.domain.project.Project;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
+import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectDto {
 
@@ -22,6 +25,15 @@ public class ProjectDto {
         private String text;
         private String audio;
         private Boolean isAudio;
+
+        public PythonServerDto.CreateAudioRequest toCreateAudioRequest(String username) {
+            return PythonServerDto.CreateAudioRequest.builder()
+                    .username(username)
+                    .narration("none")
+                    .text(text)
+                    .projectId(projectId)
+                    .build();
+        }
     }
 
     @Getter
@@ -139,5 +151,33 @@ public class ProjectDto {
         private String uploadFileName;
         // S3 에 저장될 파일명
         private String storeFileName;
+
+    @NoArgsConstructor
+    @Builder
+    public static class ModificationPageResponse {
+        private Long projectId;
+        private String text;
+        private String audio;
+        private List<Sentence> sentenceList;
+
+        public static ModificationPageResponse of(PythonServerDto.CreateAudioRequest request) {
+            return ModificationPageResponse.builder()
+                    .projectId(request.getProjectId())
+                    .text(request.getText())
+                    .audio("")
+                    .sentenceList(new ArrayList<>())
+                    .build();
+        }
+
+        public void setSentenceList(ProjectDto.Sentence sentence) {
+            sentenceList.add(sentence);
+        }
+    }
+
+    @Getter
+    @Builder
+    public static class Sentence {
+        private String sentence;
+        private String sentenceAudio;
     }
 }
