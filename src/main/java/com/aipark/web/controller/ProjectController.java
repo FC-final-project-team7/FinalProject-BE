@@ -76,7 +76,7 @@ public class ProjectController {
     /**
      * 프로젝트 리스트에서 프로젝트 하나를 삭제할 때
      * @PathVariable project_id(프로젝트 기본키 값)
-     * @return
+     * @return "삭제됐습니다."
      */
     @DeleteMapping("/{projectId}")
     public ResponseEntity<String> deleteProject(@PathVariable Long projectId) {
@@ -97,8 +97,8 @@ public class ProjectController {
 
     /**
      * 수정페이지에서 자동저장할 때
-     * @RequestBody
-     * @return
+     * @RequestBody 자동저장을 위한 데이터(projectId, text)
+     * @return "수정됐습니다."
      */
     @PutMapping("/edit/auto")
     public ResponseEntity<String> ModificationPageAutoSave(@RequestBody ProjectDto.TextAutoSave requestDto) {
