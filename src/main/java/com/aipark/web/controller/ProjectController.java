@@ -45,8 +45,8 @@ public class ProjectController {
      * @return projectDto
      */
     @PostMapping("/auto")
-    public ResponseEntity<ProjectDto.TextResponse> projectAutoUpdate(@RequestBody ProjectDto.ProjectAutoRequest requestDto){
-        return ResponseEntity.ok(projectService.textAutoSave(requestDto));
+    public ResponseEntity<String> projectAutoUpdate(@RequestBody ProjectDto.ProjectAutoRequest requestDto){
+        return ResponseEntity.ok("수정됐습니다.");
     }
     @GetMapping
     public ResponseEntity<List<ProjectDto.BasicDto>> getProjectList(){
@@ -55,7 +55,7 @@ public class ProjectController {
 
     /**
      * 음성 업로드로 프로젝트 만들 때
-     * @RequestBody projectId(프로젝트 id)
+     * @ModelAttribute projectId(프로젝트 id)
      * @return
      */
     @PostMapping("/audio")
@@ -65,7 +65,7 @@ public class ProjectController {
 
     /**
      * 프로젝트 리스트에서 프로젝트 하나를 요청할 때
-     * @RequestBody project_id(프로젝트 기본키 값)
+     * @PathVariable project_id(프로젝트 기본키 값)
      * @return
      */
     @GetMapping("/{projectId}")
@@ -75,13 +75,13 @@ public class ProjectController {
 
     /**
      * 프로젝트 리스트에서 프로젝트 하나를 삭제할 때
-     * @RequestBody project_id(프로젝트 기본키 값)
-     * @return
+     * @PathVariable project_id(프로젝트 기본키 값)
+     * @return "삭제됐습니다."
      */
     @DeleteMapping("/{projectId}")
-    public ResponseEntity deleteProject(@PathVariable Long projectId) {
+    public ResponseEntity<String> deleteProject(@PathVariable Long projectId) {
         projectService.deleteProject(projectId);
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok("삭제됐습니다.");
     }
 
     /**
@@ -92,6 +92,17 @@ public class ProjectController {
     @PutMapping("/edit")
     public ResponseEntity<ProjectDto.ModificationPageResponse> modifyText(@RequestBody ProjectDto.ProjectAutoRequest requestDto) {
         projectService.textAutoSave(requestDto);
-        return ResponseEntity.ok(projectService.TextModificationPage(requestDto));
+        return ResponseEntity.ok(projectService.textModificationPage(requestDto));
+    }
+
+    /**
+     * 수정페이지에서 자동저장할 때
+     * @RequestBody 자동저장을 위한 데이터(projectId, text)
+     * @return "수정됐습니다."
+     */
+    @PutMapping("/edit/auto")
+    public ResponseEntity<String> ModificationPageAutoSave(@RequestBody ProjectDto.TextAutoSave requestDto) {
+        projectService.TextAutoSave(requestDto);
+        return ResponseEntity.ok("수정됐습니다.");
     }
 }

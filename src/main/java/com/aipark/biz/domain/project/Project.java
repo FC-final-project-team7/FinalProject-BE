@@ -152,4 +152,8 @@ public class Project {
                 .background(background)
                 .build();
     }
+
+    public void textUpdateProject(ProjectDto.TextAutoSave requestDto) {
+        this.text = requestDto.getText();
+    }
 }
