@@ -20,8 +20,8 @@ public class ProjectController {
      * @return
      */
     @PostMapping("/text")
-    public ResponseEntity<ProjectDto.TextResponse> projectText(@RequestBody ProjectDto.TextSaveRequest requestDto){
-        return ResponseEntity.ok(projectService.textSave(requestDto));
+    public ResponseEntity<ProjectDto.TextResponse> projectText(){
+        return ResponseEntity.ok(projectService.textSave());
     }
 
     /**
@@ -30,8 +30,8 @@ public class ProjectController {
      * @return
      */
     @PostMapping("/audio")
-    public ResponseEntity<ProjectDto.AudioResponse> projectAudio(@RequestBody ProjectDto.AudioSaveRequest requestDto){
-        return ResponseEntity.ok(projectService.audioSave(requestDto));
+    public ResponseEntity<ProjectDto.AudioResponse> projectAudio(){
+        return ResponseEntity.ok(projectService.audioSave());
 
     }
 }

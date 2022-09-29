@@ -15,33 +15,51 @@ import javax.persistence.*;
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "project_id")
     private Long id;
 
-    private String avatarName;
+    private String projectName;
+    private String avatarAudio;
     private String sex;
     private String language;
-    private Long durationSilence;
-    private Long pitch;
-    private Long speed;
+    private Double durationSilence;
+    private Double pitch;
+    private Double speed;
     private String text;
-    private String audioName;
+    private String audio;
     private boolean isAudio;
+    private String avatar;
+    private String category1;
+    private String category2;
+    private String category3;
+    private String background;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder
-    public Project(String avatarName, String sex, String language, Long durationSilence, Long pitch, Long speed, String text, String audioName, boolean isAudio) {
-        this.avatarName = avatarName;
+    public Project(Long id,String projectName, String avatarAudio, String sex, String language, Double durationSilence,
+                   Double pitch, Double speed, String text, String audio, boolean isAudio, String avatar,
+                   String category1, String category2, String category3, String background, Member member) {
+        this.id = id;
+        this.projectName = projectName;
+        this.avatarAudio = avatarAudio;
         this.sex = sex;
         this.language = language;
         this.durationSilence = durationSilence;
         this.pitch = pitch;
         this.speed = speed;
         this.text = text;
-        this.audioName = audioName;
+        this.audio = audio;
         this.isAudio = isAudio;
+        this.avatar = avatar;
+        this.category1 = category1;
+        this.category2 = category2;
+        this.category3 = category3;
+        this.background = background;
+        this.member = member;
     }
 
     public void setMember(Member member) {
@@ -52,5 +70,26 @@ public class Project {
         if(!this.member.getProjectList().contains(this)){
             this.member.addProject(this);
         }
+    }
+
+    public Project defaultCreate(){
+        return Project.builder()
+                .projectName("")
+                .avatarAudio("")
+                .sex("MALE")
+                .language("korean")
+                .durationSilence(0.5)
+                .pitch(1.0)
+                .speed(1.0)
+                .text("")
+                .audio("")
+                .isAudio(false)
+                .avatar("")
+                .category1("")
+                .category2("")
+                .category3("")
+                .background("")
+                .build();
+
     }
 }

@@ -11,9 +11,9 @@ public class ProjectDto {
     @Builder
     public static class TextResponse {
         private String text;
-        private Long pitch;
-        private Long speed;
-        private Long durationSilence;
+        private Double pitch;
+        private Double speed;
+        private Double durationSilence;
         private String language;
         private String sex;
 
@@ -36,7 +36,7 @@ public class ProjectDto {
 
         public static AudioResponse of(Project project){
             return AudioResponse.builder()
-                    .audioName(project.getAudioName())
+                    .audioName(project.getAudio())
                     .build();
         }
     }
@@ -46,44 +46,41 @@ public class ProjectDto {
     @AllArgsConstructor
     @Builder
     @ToString
-    public static class TextSaveRequest {
-        private String text;
-        private Long pitch;
-        private Long speed;
-        private Long durationSilence;
-        private String language;
+    public static class BasicDto {
+        private Long projectId;
+        private String projectName;
+        private String avatarAudio;
         private String sex;
+        private String language;
+        private Double durationSilence;
+        private Double pitch;
+        private Double speed;
+        private String text;
+        private String audio;
+        private boolean isAudio;
+        private String avatar;
+        private String category1;
+        private String category2;
+        private String category3;
+        private String background;
 
         public Project toEntity(){
             return Project.builder()
-                    .text(text)
+                    .projectName(projectName)
+                    .avatarAudio(avatarAudio)
+                    .sex(sex)
+                    .language(language)
+                    .durationSilence(durationSilence)
                     .pitch(pitch)
                     .speed(speed)
-                    .durationSilence(durationSilence)
-                    .language(language)
-                    .sex(sex)
-                    .isAudio(false)
-                    .build();
-        }
-    }
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    @ToString
-    public static class AudioSaveRequest {
-        private String audioName;
-
-        public Project toEntity(){
-            return Project.builder()
-                    .text("음성업로드입니다")
-                    .pitch(-99L)
-                    .speed(-99L)
-                    .durationSilence(-99L)
-                    .language("음성업로드입니다")
-                    .sex("음성업로드입니다.")
-                    .audioName(audioName)
-                    .isAudio(true)
+                    .text(text)
+                    .audio(audio)
+                    .isAudio(isAudio)
+                    .avatar(avatar)
+                    .category1(category1)
+                    .category2(category2)
+                    .category3(category3)
+                    .background(background)
                     .build();
         }
     }
