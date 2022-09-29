@@ -65,7 +65,6 @@ public class PythonServerService {
         return Arrays.stream(text.split("[.]")).map(s -> s.concat(".")).collect(Collectors.toList());
     }
 
-    @Transactional
     public void saveTempAudio(PythonServerDto.CreateAudioResponse response, Long projectId) {
         Project project = projectRepository.findById(projectId).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
