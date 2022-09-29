@@ -48,13 +48,11 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectDto.TextResponse textAutoSave(ProjectDto.ProjectAutoRequest requestDto){
+    public void textAutoSave(ProjectDto.ProjectAutoRequest requestDto){
         Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
         project.updateProject(requestDto);
-
-        return ProjectDto.TextResponse.of(project);
     }
 
     @Transactional
@@ -106,7 +104,8 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
-    public ProjectDto.ModificationPageResponse TextModificationPage(ProjectDto.ProjectAutoRequest requestDto) {
+    @Transactional(readOnly = true)
+    public ProjectDto.ModificationPageResponse textModificationPage(ProjectDto.ProjectAutoRequest requestDto) {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
 
@@ -115,5 +114,12 @@ public class ProjectService {
         ProjectDto.ModificationPageResponse response = pythonServerService.createSentenceAudioFile(request);
 
         return response;
+    }
+
+    @Transactional
+    public void TextAutoSave(ProjectDto.TextAutoSave requestDto) {
+        Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
+                () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
+        project.textUpdateProject(requestDto);
     }
 }
