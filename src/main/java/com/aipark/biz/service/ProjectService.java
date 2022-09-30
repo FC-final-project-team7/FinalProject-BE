@@ -33,6 +33,7 @@ public class ProjectService {
     private final PythonServerService pythonServerService;
     private final ImageRepository imageRepository;
 
+
     @Transactional
     public ProjectDto.TextResponse textSave() {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
