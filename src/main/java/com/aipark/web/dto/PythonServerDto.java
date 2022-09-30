@@ -2,9 +2,11 @@ package com.aipark.web.dto;
 
 import com.aipark.biz.domain.project.Project;
 import com.aipark.biz.domain.tempAudio.TempAudio;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PythonServerDto {
