@@ -2,9 +2,11 @@ package com.aipark.web.dto;
 
 import com.aipark.biz.domain.project.Project;
 import com.aipark.biz.domain.tempAudio.TempAudio;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PythonServerDto {
@@ -26,7 +28,7 @@ public class PythonServerDto {
     @Builder
     public static class CreateAudioResponse {
         private String status;
-        private List<SentenceAndUrl> url = new ArrayList<>();
+        private List<SentenceAndUrl> url;
 
         public static TempAudio toEntity(Project project, String url) {
             return TempAudio.builder()
@@ -52,4 +54,12 @@ public class PythonServerDto {
         }
     }
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class AudioResponse {
+        private String status;
+        private String url;
+    }
 }

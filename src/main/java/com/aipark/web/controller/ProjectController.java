@@ -4,7 +4,6 @@ import com.aipark.biz.service.ProjectService;
 import com.aipark.web.dto.ProjectDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -102,7 +101,18 @@ public class ProjectController {
      */
     @PutMapping("/edit/auto")
     public ResponseEntity<String> ModificationPageAutoSave(@RequestBody ProjectDto.TextAutoSave requestDto) {
-        projectService.TextAutoSave(requestDto);
+        projectService.projectTextAutoSave(requestDto);
         return ResponseEntity.ok("수정됐습니다.");
+    }
+
+    /**
+     * 아바타 선택 페이지로 넘어갈 때
+     * @param requestDto
+     * @return ProjectDto.AvatarPage
+     */
+    @PutMapping("/edit/audio")
+    public ResponseEntity<ProjectDto.AvatarPage> moveAvatarPage(@RequestBody ProjectDto.TextAutoSave requestDto) {
+        projectService.projectTextAutoSave(requestDto);
+        return ResponseEntity.ok(projectService.moveAvatarPage(requestDto));
     }
 }

@@ -1,9 +1,12 @@
 package com.aipark.web.dto;
 
 import com.aipark.biz.domain.project.Project;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
-import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +16,7 @@ public class ProjectDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class ProjectAutoRequest{
+    public static class ProjectAutoRequest {
         private Long projectId;
         private String projectName;
         private String avatarAudio;
@@ -49,7 +52,7 @@ public class ProjectDto {
         private String sex;
         private String avatarAudio;
 
-        public static TextResponse of(Project project){
+        public static TextResponse of(Project project) {
             return TextResponse.builder()
                     .text(project.getText())
                     .pitch(project.getPitch())
@@ -61,6 +64,7 @@ public class ProjectDto {
                     .build();
         }
     }
+
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -68,7 +72,7 @@ public class ProjectDto {
     public static class AudioResponse {
         private Long projectId;
 
-        public static AudioResponse of(Project project){
+        public static AudioResponse of(Project project) {
             return AudioResponse.builder()
                     .projectId(project.getId())
                     .build();
@@ -117,7 +121,7 @@ public class ProjectDto {
             this.background = project.getBackground();
         }
 
-        public Project toEntity(){
+        public Project toEntity() {
             return Project.builder()
                     .projectName(projectName)
                     .avatarAudio(avatarAudio)
@@ -171,6 +175,7 @@ public class ProjectDto {
                     .sentenceList(new ArrayList<>())
                     .build();
         }
+
         public void setSentenceList(ProjectDto.Sentence sentence) {
             sentenceList.add(sentence);
         }
@@ -190,5 +195,27 @@ public class ProjectDto {
     public static class TextAutoSave {
         private Long projectId;
         private String text;
+
+        public PythonServerDto.CreateAudioRequest toCreateAudioRequest(String username) {
+            return PythonServerDto.CreateAudioRequest.builder()
+                    .username(username)
+                    .narration("none")
+                    .text(text)
+                    .projectId(projectId)
+                    .build();
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class AvatarPage {
+        private Long projectId;
+        private String avatar;
+        private String category1;
+        private String category2;
+        private String category3;
+        private String background;
     }
 }
