@@ -4,13 +4,14 @@ import com.aipark.biz.domain.member.Member;
 import com.aipark.biz.domain.member.MemberRepository;
 import com.aipark.biz.domain.project.Project;
 import com.aipark.biz.domain.project.ProjectRepository;
+import com.aipark.biz.service.file.FileStore;
 import com.aipark.config.SecurityUtil;
 import com.aipark.exception.MemberErrorResult;
 import com.aipark.exception.MemberException;
 import com.aipark.exception.ProjectErrorResult;
 import com.aipark.exception.ProjectException;
 import com.aipark.web.dto.ProjectDto;
-import com.aipark.biz.service.file.FileStore;
+import com.aipark.web.dto.PythonServerDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,12 +29,13 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
+    private final PythonServerService pythonServerService;
 
     @Transactional
     public ProjectDto.TextResponse textSave() {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
-        if(member.getProjectList().size()==5){
+        if (member.getProjectList().size() == 5) {
             List<Project> projects = projectRepository.findAllAsc(member);
             member.getProjectList().remove(projects.get(0));
             projectRepository.delete(projects.get(0));
@@ -46,13 +48,11 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectDto.TextResponse textAutoSave(ProjectDto.ProjectAutoRequest requestDto){
+    public void textAutoSave(ProjectDto.ProjectAutoRequest requestDto) {
         Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
         project.updateProject(requestDto);
-
-        return ProjectDto.TextResponse.of(project);
     }
 
     @Transactional
@@ -65,7 +65,6 @@ public class ProjectService {
         // 클라이언트로부터 프로젝트 ID 값을 받아와서 DB 에서 프로젝트를 조회하고
         // 해당하는 프로젝트의 audio 와 audio_uuid 에 값을 넣어줌
         Project project = Project.defaultCreate_audio(uploadFileDto.getUploadFileName(), uploadFileDto.getStoreFileName());
-
         member.addProject(project);
 
         Project save = projectRepository.save(project);
@@ -102,5 +101,41 @@ public class ProjectService {
                 .stream()
                 .map(ProjectDto.BasicDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public ProjectDto.ModificationPageResponse textModificationPage(ProjectDto.ProjectAutoRequest requestDto) {
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
+
+        PythonServerDto.CreateAudioRequest request = requestDto.toCreateAudioRequest(member.getUsername());
+
+        ProjectDto.ModificationPageResponse response = pythonServerService.createSentenceAudioFile(request);
+
+        return response;
+    }
+
+    @Transactional
+    public void projectTextAutoSave(ProjectDto.TextAutoSave requestDto) {
+        Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
+                () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
+        project.textUpdateProject(requestDto);
+    }
+
+    @Transactional
+    public ProjectDto.AvatarPage moveAvatarPage(ProjectDto.TextAutoSave requestDto) {
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
+
+        Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
+                () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
+
+        PythonServerDto.CreateAudioRequest createAudioRequest = requestDto.toCreateAudioRequest(member.getUsername());
+        PythonServerDto.AudioResponse responseDto = pythonServerService.createAudioFile(createAudioRequest);
+
+        project.updateProjectAudioUrl(responseDto);
+        ProjectDto.AvatarPage avatarPageDto = project.createAvatarPageDto();
+
+        return avatarPageDto;
     }
 }

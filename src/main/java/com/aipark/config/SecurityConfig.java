@@ -58,8 +58,8 @@ public class SecurityConfig {
                         , "/webjars/**"
                         , "/swagger/**"
                         , "/favicon.ico"
-                        ,"/members/check-id"
-                        ,"/test/**"
+                        , "/members/check-id"
+
                 ).permitAll()
                 .anyRequest().authenticated()
 
