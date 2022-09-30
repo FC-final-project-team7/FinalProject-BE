@@ -12,13 +12,11 @@ import com.aipark.web.dto.PythonServerDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,24 +31,20 @@ public class PythonServerService {
     private final ProjectRepository projectRepository;
 
     public ProjectDto.ModificationPageResponse createSentenceAudioFile(PythonServerDto.CreateAudioRequest request) {
-        String url = "http://localhost:8000/audios/sentence";
+
         List<String> sentences = divideSentence(request.getText());
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", request.getUsername());
         jsonObject.put("text", sentences);
         jsonObject.put("narration", request.getNarration());
 
-        HttpEntity<String> requestMessage = new HttpEntity<>(jsonObject.toString(), headers);
-
-        ResponseEntity<PythonServerDto.CreateAudioResponse> responseEntity = restTemplate.postForEntity(url, requestMessage, PythonServerDto.CreateAudioResponse.class);
-
-        PythonServerDto.CreateAudioResponse response = responseEntity.getBody();
+        PythonServerDto.CreateAudioResponse response = buildWebClient().post()
+                .uri("/audios/sentence")
+                .body(Mono.just(jsonObject.toString()), JSONObject.class)
+                .retrieve()
+                .bodyToMono(PythonServerDto.CreateAudioResponse.class)
+                .block();
 
         if (response.getStatus().equals("fail")) {
             throw new PythonServerException(PythonServerErrorResult.AUDIO_CREATE_ERROR);
@@ -59,6 +53,17 @@ public class PythonServerService {
         saveTempAudio(response, request.getProjectId());
 
         return createDto(request, response);
+    }
+
+    public void createAudioFile(PythonServerDto.CreateAudioRequest requestDto) {
+
+    }
+
+    public WebClient buildWebClient() {
+        return WebClient.builder()
+                .baseUrl("http://localhost:8000")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
     }
 
     public List<String> divideSentence(String text) {
