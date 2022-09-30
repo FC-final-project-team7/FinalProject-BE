@@ -59,10 +59,6 @@ public class SecurityConfig {
                         , "/swagger/**"
                         , "/favicon.ico"
                         , "/members/check-id"
-<<<<<<< HEAD
-
-=======
->>>>>>> 5d233a0752efcfa52e68436493c440f3455fc162
                 ).permitAll()
                 .anyRequest().authenticated()
 
