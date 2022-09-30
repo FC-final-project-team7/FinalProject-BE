@@ -2,6 +2,7 @@ package com.aipark.biz.domain.project;
 
 import com.aipark.biz.domain.member.Member;
 import com.aipark.web.dto.ProjectDto;
+import com.aipark.web.dto.PythonServerDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -153,7 +154,25 @@ public class Project {
                 .build();
     }
 
+    // 수정페이지에서 텍스트 자동 업데이트시 사용하는 메소드
     public void textUpdateProject(ProjectDto.TextAutoSave requestDto) {
         this.text = requestDto.getText();
+    }
+
+    // 아바타선택 페이지로 넘어갈 때 생성되는 음성파일의 주소와 이름을 저장하는 메소드
+    public void updateProjectAudioUrl(PythonServerDto.AudioResponse requestDto) {
+        this.audio = this.projectName + ".wav";
+        this.audio_uuid = requestDto.getUrl();
+    }
+
+    public ProjectDto.AvatarPage createAvatarPageDto(){
+        return ProjectDto.AvatarPage.builder()
+                .projectId(id)
+                .avatar(avatar)
+                .category1(category1)
+                .category2(category2)
+                .category3(category3)
+                .background(background)
+                .build();
     }
 }
