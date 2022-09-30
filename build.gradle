@@ -35,6 +35,7 @@ dependencies {
     // oauth2.0
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
@@ -53,6 +54,9 @@ dependencies {
 
     // JSON
     implementation group: 'org.json', name: 'json', version: '20220320'
+
+    // web client
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 }
 
