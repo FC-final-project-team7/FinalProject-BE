@@ -26,7 +26,7 @@ public class PythonServerDto {
     @Builder
     public static class CreateAudioResponse {
         private String status;
-        private List<SentenceAndUrl> url = new ArrayList<>();
+        private List<SentenceAndUrl> url;
 
         public static TempAudio toEntity(Project project, String url) {
             return TempAudio.builder()
@@ -52,4 +52,12 @@ public class PythonServerDto {
         }
     }
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class AudioResponse {
+        private String status;
+        private String url;
+    }
 }
