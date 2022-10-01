@@ -192,9 +192,10 @@ public class ProjectDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class TextAutoSave {
+    public static class TextAndUrlDto {
         private Long projectId;
         private String text;
+        private String audioUrl;
 
         public PythonServerDto.CreateAudioRequest toCreateAudioRequest(String username) {
             return PythonServerDto.CreateAudioRequest.builder()
@@ -204,13 +205,21 @@ public class ProjectDto {
                     .projectId(projectId)
                     .build();
         }
+
+        public ProjectDto.TextAndUrlDto of(String url) {
+            return TextAndUrlDto.builder()
+                    .projectId(projectId)
+                    .text(text)
+                    .audioUrl(url)
+                    .build();
+        }
     }
 
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class AvatarPage {
+    public static class AvatarPageResponse {
         private Long projectId;
         private String avatar;
         private String category1;

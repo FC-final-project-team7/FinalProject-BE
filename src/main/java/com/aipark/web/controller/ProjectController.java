@@ -54,15 +54,7 @@ public class ProjectController {
 
     /**
      * 음성 업로드로 프로젝트 만들 때
-<<<<<<< HEAD
-<<<<<<< Updated upstream
      * @ModelAttribute projectId(프로젝트 id)
-=======
-     * @RequestBody projectId(프로젝트 id)
->>>>>>> Stashed changes
-=======
-     * @RequestBody projectId(프로젝트 id)
->>>>>>> 5d233a0752efcfa52e68436493c440f3455fc162
      * @return
      */
     @PostMapping("/audio")
@@ -108,7 +100,7 @@ public class ProjectController {
      * @return "수정됐습니다."
      */
     @PutMapping("/edit/auto")
-    public ResponseEntity<String> ModificationPageAutoSave(@RequestBody ProjectDto.TextAutoSave requestDto) {
+    public ResponseEntity<String> ModificationPageAutoSave(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
         projectService.projectTextAutoSave(requestDto);
         return ResponseEntity.ok("수정됐습니다.");
     }
@@ -119,11 +111,21 @@ public class ProjectController {
      * @return ProjectDto.AvatarPage
      */
     @PutMapping("/edit/audio")
-    public ResponseEntity<ProjectDto.AvatarPage> moveAvatarPage(@RequestBody ProjectDto.TextAutoSave requestDto) {
+    public ResponseEntity<ProjectDto.AvatarPageResponse> moveAvatarPage(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
         projectService.projectTextAutoSave(requestDto);
         return ResponseEntity.ok(projectService.moveAvatarPage(requestDto));
     }
 
+    /**
+     * 음성 생성 요청 시(문장별 음성 생성 제외)
+     * @param requestDto
+     * @return
+     */
+    @PostMapping("/audio/text")
+    public ResponseEntity<ProjectDto.TextAndUrlDto> makeAudioFile(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
+        return ResponseEntity.ok(projectService.makeAudioFile(requestDto));
+    }
+    
     /**
      * 아바타 리스트 보내준다.
      * @return imageName(이미지 이름), imageUrl(s3에 저장되어 있는 이미지 경로)

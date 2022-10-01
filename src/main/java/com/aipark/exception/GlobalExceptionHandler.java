@@ -40,6 +40,16 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler(AwsException.class)
+    public ResponseEntity<ErrorResponse> awsException(AwsException awsException){
+        AwsErrorResult errorResult = awsException.getAwsErrorResult();
+        return ResponseEntity.status(errorResult.getHttpStatus()).body(
+                ErrorResponse.builder()
+                        .code(errorResult.getHttpStatus().name())
+                        .message(errorResult.getMessage())
+                        .build());
+    }
+
     @Getter
     @Builder
     static class ErrorResponse{
