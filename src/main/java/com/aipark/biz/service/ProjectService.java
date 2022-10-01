@@ -90,6 +90,12 @@ public class ProjectService {
         projectRepository.deleteById(projectId);
     }
 
+    /**
+     * 로그인한 사용자의 프로젝트에 접근했는지 체크해주는 메소드
+     * @param projectUsername
+     * @return
+     */
+    //TODO intercepter로 바꾸기
     @Transactional(readOnly = true)
     public boolean checkMember(String projectUsername) {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
@@ -105,6 +111,12 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 수정페이지로 넘어오면 문장별 음성 생성 요청을 파이썬 서버에 보낸다.
+     * 그리고 받은 문장별 음성 파일의 주소를 테이블에 저장한다.
+     * @param requestDto
+     * @return ProjectDto.ModificationPageResponse
+     */
     @Transactional
     public ProjectDto.ModificationPageResponse textModificationPage(ProjectDto.ProjectAutoRequest requestDto) {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
@@ -117,27 +129,52 @@ public class ProjectService {
         return response;
     }
 
+    /**
+     * 수정페이지에서 자동저장 api가 오면 전체 텍스트만 업데이트 해준다.
+     * @param requestDto
+     */
     @Transactional
-    public void projectTextAutoSave(ProjectDto.TextAutoSave requestDto) {
+    public void projectTextAutoSave(ProjectDto.TextAndUrlDto requestDto) {
         Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
         project.textUpdateProject(requestDto);
     }
 
+    /**
+     * 텍스트로 음성 파일 생성 요청을 파이썬에 보내고, 받은 파일명과 주소를 project에 저장한다.
+     * @param requestDto
+     * @return ProjectDto.AvatarPage
+     */
     @Transactional
-    public ProjectDto.AvatarPage moveAvatarPage(ProjectDto.TextAutoSave requestDto) {
+    public ProjectDto.AvatarPageResponse moveAvatarPage(ProjectDto.TextAndUrlDto requestDto) {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
-
         Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
-        PythonServerDto.CreateAudioRequest createAudioRequest = requestDto.toCreateAudioRequest(member.getUsername());
-        PythonServerDto.AudioResponse responseDto = pythonServerService.createAudioFile(createAudioRequest);
+        PythonServerDto.AudioResponse responseDto = pythonServerService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
 
         project.updateProjectAudioUrl(responseDto);
-        ProjectDto.AvatarPage avatarPageDto = project.createAvatarPageDto();
 
-        return avatarPageDto;
+        ProjectDto.AvatarPageResponse avatarPageResponseDto = project.createAvatarPageDto();
+
+        return avatarPageResponseDto;
+    }
+
+    @Transactional
+    public ProjectDto.TextAndUrlDto makeAudioFile(ProjectDto.TextAndUrlDto requestDto) {
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
+        Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
+                () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
+
+        PythonServerDto.AudioResponse audioFile = pythonServerService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
+
+        fileStore.deleteFile(project.getAudio_uuid());
+
+        //project에 이름과 파일명 업데이트
+        project.updateProjectAudioUrl(audioFile);
+
+        return requestDto.of(audioFile.getUrl());
     }
 }
