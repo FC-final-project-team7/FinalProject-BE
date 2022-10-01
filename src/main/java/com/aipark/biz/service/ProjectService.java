@@ -161,6 +161,11 @@ public class ProjectService {
         return avatarPageResponseDto;
     }
 
+    /**
+     * 음성생성 요청시, 기존의 파일을 삭제하고 새로운 파일을 저장한다.
+     * @param requestDto
+     * @return ProjectDto.TextAndUrlDto
+     */
     @Transactional
     public ProjectDto.TextAndUrlDto makeAudioFile(ProjectDto.TextAndUrlDto requestDto) {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
