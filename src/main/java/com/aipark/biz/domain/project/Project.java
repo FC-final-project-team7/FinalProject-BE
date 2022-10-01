@@ -37,7 +37,6 @@ public class Project {
     private String category3;
     private String background;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -95,7 +94,6 @@ public class Project {
                 .category3("1-3-1.png")
                 .background("BG_0.png")
                 .build();
-
     }
 
     public static Project defaultCreate_audio(String audio, String audio_uuid){
@@ -117,7 +115,6 @@ public class Project {
                 .category3("1-3-1.png")
                 .background("BG_0.png")
                 .build();
-
     }
 
     public void updateProject(ProjectDto.ProjectAutoRequest requestDto) {

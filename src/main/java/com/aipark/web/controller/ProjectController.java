@@ -125,4 +125,13 @@ public class ProjectController {
     public ResponseEntity<ProjectDto.TextAndUrlDto> makeAudioFile(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
         return ResponseEntity.ok(projectService.makeAudioFile(requestDto));
     }
+    
+    /**
+     * 아바타 리스트 보내준다.
+     * @return imageName(이미지 이름), imageUrl(s3에 저장되어 있는 이미지 경로)
+     */
+    @GetMapping("/avatar")
+    public ResponseEntity<List<ProjectDto.ImageDto>> sendAvatar() {
+        return ResponseEntity.ok(projectService.sendAvatar());
+    }
 }
