@@ -54,7 +54,15 @@ public class ProjectController {
 
     /**
      * 음성 업로드로 프로젝트 만들 때
+<<<<<<< HEAD
+<<<<<<< Updated upstream
      * @ModelAttribute projectId(프로젝트 id)
+=======
+     * @RequestBody projectId(프로젝트 id)
+>>>>>>> Stashed changes
+=======
+     * @RequestBody projectId(프로젝트 id)
+>>>>>>> 5d233a0752efcfa52e68436493c440f3455fc162
      * @return
      */
     @PostMapping("/audio")
@@ -114,5 +122,14 @@ public class ProjectController {
     public ResponseEntity<ProjectDto.AvatarPage> moveAvatarPage(@RequestBody ProjectDto.TextAutoSave requestDto) {
         projectService.projectTextAutoSave(requestDto);
         return ResponseEntity.ok(projectService.moveAvatarPage(requestDto));
+    }
+
+    /**
+     * 아바타 리스트 보내준다.
+     * @return imageName(이미지 이름), imageUrl(s3에 저장되어 있는 이미지 경로)
+     */
+    @GetMapping("/avatar")
+    public ResponseEntity<List<ProjectDto.ImageDto>> sendAvatar() {
+        return ResponseEntity.ok(projectService.sendAvatar());
     }
 }

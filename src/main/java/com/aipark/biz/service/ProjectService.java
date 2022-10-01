@@ -1,5 +1,6 @@
 package com.aipark.biz.service;
 
+import com.aipark.biz.domain.image.ImageRepository;
 import com.aipark.biz.domain.member.Member;
 import com.aipark.biz.domain.member.MemberRepository;
 import com.aipark.biz.domain.project.Project;
@@ -30,6 +31,8 @@ public class ProjectService {
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
     private final PythonServerService pythonServerService;
+    private final ImageRepository imageRepository;
+
 
     @Transactional
     public ProjectDto.TextResponse textSave() {
@@ -59,20 +62,18 @@ public class ProjectService {
     public ProjectDto.AudioResponse audioSave(ProjectDto.AudioRequest audioRequest) throws IOException {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
-
+        
         MultipartFile audioFile = audioRequest.getAudioFile();
         ProjectDto.UploadFileDto uploadFileDto = fileStore.storeFile(audioFile);
         // 클라이언트로부터 프로젝트 ID 값을 받아와서 DB 에서 프로젝트를 조회하고
         // 해당하는 프로젝트의 audio 와 audio_uuid 에 값을 넣어줌
         Project project = Project.defaultCreate_audio(uploadFileDto.getUploadFileName(), uploadFileDto.getStoreFileName());
-
         member.addProject(project);
 
         Project save = projectRepository.save(project);
         return ProjectDto.AudioResponse.of(save);
 
     }
-
     @Transactional(readOnly = true)
     public ProjectDto.BasicDto getProject(Long projectId) {
         Project project = projectRepository.findById(projectId).orElseThrow(
@@ -97,7 +98,6 @@ public class ProjectService {
 
         return member.getUsername().equals(projectUsername);
     }
-
     public List<ProjectDto.BasicDto> getProjectList() {
         return projectRepository.findAll()
                 .stream()
@@ -139,5 +139,13 @@ public class ProjectService {
         ProjectDto.AvatarPage avatarPageDto = project.createAvatarPageDto();
 
         return avatarPageDto;
+    }
+
+    // 아바타 리스트 전달
+    @Transactional(readOnly = true)
+    public List<ProjectDto.ImageDto> sendAvatar() {
+        return imageRepository.findImageByCategory().stream()
+                .map(ProjectDto.ImageDto::new)
+                .collect(Collectors.toList());
     }
 }

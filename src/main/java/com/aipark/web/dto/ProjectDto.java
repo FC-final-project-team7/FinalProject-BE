@@ -1,12 +1,12 @@
 package com.aipark.web.dto;
 
+import com.aipark.biz.domain.image.Image;
 import com.aipark.biz.domain.project.Project;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -218,4 +218,18 @@ public class ProjectDto {
         private String category3;
         private String background;
     }
+
+    // avatar 리스트 전달
+    @Getter
+    public static class ImageDto {
+        private String imageName;
+        private String imageUrl;
+
+        @Builder
+        public ImageDto(Image image) {
+            this.imageName = image.getCategory();
+            this.imageUrl = image.getImageUrl();
+        }
+    }
+
 }
