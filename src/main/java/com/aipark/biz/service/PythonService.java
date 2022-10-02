@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PythonServerService {
+public class PythonService {
 
     private final TempAudioRepository tempAudioRepository;
     private final ProjectRepository projectRepository;
@@ -66,7 +66,7 @@ public class PythonServerService {
 
     /**
      * 수정 페이지에서 아바타 선택 페이지로 넘어갈 때, 파이썬에 음성 파일 생성 요청할 때
-     * 생성버튼을 눌러서 음성을 요청할 때(문장별 음성 생성은 예외)
+     * 생성버튼을 눌러서 음성을 요청할 때
      * @param requestDto
      * @return
      */
