@@ -5,12 +5,11 @@ import com.aipark.biz.domain.member.Member;
 import com.aipark.biz.domain.member.MemberRepository;
 import com.aipark.biz.domain.project.Project;
 import com.aipark.biz.domain.project.ProjectRepository;
+import com.aipark.biz.domain.tempAudio.TempAudio;
+import com.aipark.biz.domain.tempAudio.TempAudioRepository;
 import com.aipark.biz.service.file.FileStore;
 import com.aipark.config.SecurityUtil;
-import com.aipark.exception.MemberErrorResult;
-import com.aipark.exception.MemberException;
-import com.aipark.exception.ProjectErrorResult;
-import com.aipark.exception.ProjectException;
+import com.aipark.exception.*;
 import com.aipark.web.dto.ProjectDto;
 import com.aipark.web.dto.PythonServerDto;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +29,9 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
-    private final PythonServerService pythonServerService;
+    private final PythonService pythonService;
     private final ImageRepository imageRepository;
+    private final TempAudioRepository tempAudioRepository;
 
 
     @Transactional
@@ -124,7 +124,7 @@ public class ProjectService {
 
         PythonServerDto.CreateAudioRequest request = requestDto.toCreateAudioRequest(member.getUsername());
 
-        ProjectDto.ModificationPageResponse response = pythonServerService.createSentenceAudioFile(request);
+        ProjectDto.ModificationPageResponse response = pythonService.createSentenceAudioFile(request);
 
         return response;
     }
@@ -152,7 +152,7 @@ public class ProjectService {
         Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
-        PythonServerDto.AudioResponse responseDto = pythonServerService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
+        PythonServerDto.AudioResponse responseDto = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
 
         project.updateProjectAudioUrl(responseDto);
 
@@ -173,7 +173,7 @@ public class ProjectService {
         Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
-        PythonServerDto.AudioResponse audioFile = pythonServerService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
+        PythonServerDto.AudioResponse audioFile = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
 
         fileStore.deleteFile(project.getAudio_uuid());
 
@@ -189,5 +189,27 @@ public class ProjectService {
         return imageRepository.findImageByCategory().stream()
                 .map(ProjectDto.ImageDto::new)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 문장별 음성 파일 생성 요청 시(생성 버튼 눌렀을 때)
+     * s3에 저장되어있는 파일은 삭제하고, tempAudio 테이블의 주소를 바꿔준다.
+     * @param requestDto
+     * @return ProjectDto.TextAndUrlDto
+     */
+    @Transactional
+    public ProjectDto.TextAndUrlDto makeAudioBySentence(ProjectDto.TextAndUrlDto requestDto) {
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
+        TempAudio tempAudio = tempAudioRepository.findByTempUrl(requestDto.getAudioUrl()).orElseThrow(
+                () -> new TempAudioException(TempAudioErrorResult.TEMP_AUDIO_NOT_FOUND));
+
+        PythonServerDto.AudioResponse response = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
+
+        fileStore.deleteFile(requestDto.getAudioUrl());
+
+        tempAudio.updateTempUrl(response.getUrl());
+
+        return requestDto.of(response.getUrl());
     }
 }
