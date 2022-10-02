@@ -117,21 +117,31 @@ public class ProjectController {
     }
 
     /**
-     * 음성 생성 요청 시(문장별 음성 생성 제외)
-     * @param requestDto
-     * @return
-     */
-    @PostMapping("/audio/text")
-    public ResponseEntity<ProjectDto.TextAndUrlDto> makeAudioFile(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
-        return ResponseEntity.ok(projectService.makeAudioFile(requestDto));
-    }
-    
-    /**
      * 아바타 리스트 보내준다.
      * @return imageName(이미지 이름), imageUrl(s3에 저장되어 있는 이미지 경로)
      */
     @GetMapping("/avatar")
     public ResponseEntity<List<ProjectDto.ImageDto>> sendAvatar() {
         return ResponseEntity.ok(projectService.sendAvatar());
+    }
+
+    /**
+     * 음성 생성 요청 시(문장별 음성 생성 제외)
+     * @param requestDto
+     * @return ProjectDto.TextAndUrlDto
+     */
+    @PostMapping("/audio/text")
+    public ResponseEntity<ProjectDto.TextAndUrlDto> makeAudioFile(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
+        return ResponseEntity.ok(projectService.makeAudioFile(requestDto));
+    }
+
+    /**
+     * 문장별 음성 파일 생성 요청 시(생성 버튼 눌렀을 때)
+     * @param requestDto
+     * @return ProjectDto.TextAndUrlDto
+     */
+    @PostMapping("/audio/sentence")
+    public ResponseEntity<ProjectDto.TextAndUrlDto> makeAudioBySentence(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
+        return ResponseEntity.ok(projectService.makeAudioBySentence(requestDto));
     }
 }

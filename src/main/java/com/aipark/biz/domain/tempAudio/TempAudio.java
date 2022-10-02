@@ -31,4 +31,8 @@ public class TempAudio {
         this.tempUrl = tempUrl;
         this.project = project;
     }
+
+    public void updateTempUrl(String url) {
+        this.tempUrl = url;
+    }
 }
