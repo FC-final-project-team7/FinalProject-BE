@@ -173,9 +173,8 @@ public class Project {
                 .build();
     }
     public void setAvatar(String avatar) {
-        if (avatar == null) {
-            return;
+        if (avatar != null) {
+            this.avatar = avatar;
         }
-        this.avatar = avatar;
     }
 }
