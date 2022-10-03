@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -192,8 +193,11 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<ProjectDto.ValueDto> sendValue(ProjectDto.AvatarRequest avatarRequest) {
+        Project project = projectRepository.findById(avatarRequest.getProjectId()).orElseThrow();
+        project.setAvatar(avatarRequest.getImageName());
+
         String avatar = avatarRequest.getImageName();
         String substring = avatar.substring(6);
         System.out.println("substring = " + substring);
