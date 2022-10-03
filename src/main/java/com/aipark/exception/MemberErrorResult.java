@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum MemberErrorResult {
     MEMBER_NOT_FOUND(HttpStatus.UNAUTHORIZED, "회원을 찾지 못하였습니다."),
-    BAD_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다.");
+    BAD_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다."),
+    AUTH_FAIL(HttpStatus.BAD_REQUEST, "인증 실패");
 
     private final HttpStatus httpStatus;
     private final String message;

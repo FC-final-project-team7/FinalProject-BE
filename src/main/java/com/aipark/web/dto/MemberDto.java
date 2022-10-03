@@ -2,14 +2,38 @@ package com.aipark.web.dto;
 
 import com.aipark.biz.domain.enums.Authority;
 import com.aipark.biz.domain.member.Member;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class MemberDto {
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    public static class FindIdRequest{
+        private String name;
+        private String email;
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    public static class FindPwdRequest{
+        private String username;
+        private String name;
+        private String email;
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @ToString
+    public static class EditPwdRequest{
+        private String username;
+        private String password;
+        private String token;
+    }
+
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
