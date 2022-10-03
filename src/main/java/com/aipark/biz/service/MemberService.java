@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RedisService redisService;
 
     /**
      * 회원 정보 조회
@@ -65,26 +66,19 @@ public class MemberService {
     }
 
     /**
-     * 비밀번호 찾기 - 회원 조회
-     * @param requestDto
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public void findPwd(MemberDto.FindPwdRequest requestDto) {
-        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(
-                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
-
-    }
-
-    /**
      * 비밀번호 찾기 - 비밀번호 변경
      * @param requestDto (username, password)
      */
     @Transactional
     public void editPwd(MemberDto.EditPwdRequest requestDto) {
+        String uuid = redisService.getValues(requestDto.getToken());
+        if(uuid.equals(requestDto.getUsername())){
+            throw new MemberException(MemberErrorResult.AUTH_FAIL);
+        }
+
         Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(
                 () ->  new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
 
-        member.changePassword(requestDto.getPassword());
+        member.changePassword(passwordEncoder.encode(requestDto.getPassword()));
     }
 }
