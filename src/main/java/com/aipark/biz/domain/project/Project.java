@@ -172,4 +172,10 @@ public class Project {
                 .background(background)
                 .build();
     }
+    public void setAvatar(String avatar) {
+        if (avatar == null) {
+            return;
+        }
+        this.avatar = avatar;
+    }
 }
