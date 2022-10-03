@@ -54,7 +54,15 @@ public class ProjectController {
 
     /**
      * 음성 업로드로 프로젝트 만들 때
+<<<<<<< HEAD
+<<<<<<< Updated upstream
      * @ModelAttribute projectId(프로젝트 id)
+=======
+     * @RequestBody projectId(프로젝트 id)
+>>>>>>> Stashed changes
+=======
+     * @RequestBody projectId(프로젝트 id)
+>>>>>>> 5d233a0752efcfa52e68436493c440f3455fc162
      * @return
      */
     @PostMapping("/audio")

@@ -9,7 +9,7 @@ cloud:
       auto: false
     s3:
       bucket: jkproject
-
+      project: /project/
 spring:
   servlet:
     multipart:

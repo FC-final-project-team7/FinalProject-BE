@@ -1,8 +1,4 @@
---DROP TABLE if EXISTS member cascade;
---DROP TABLE if EXISTS PROJECT cascade;
---DROP TABLE if EXISTS TOKEN cascade;
---DROP TABLE if EXISTS VIDEO cascade;
---DROP TABLE if EXISTS TEMP_AUDIO cascade;
+
 DROP TABLE if EXISTS IMAGE cascade;
 DROP TABLE if EXISTS VOICE cascade;
 
