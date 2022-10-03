@@ -1,5 +1,6 @@
 package com.aipark.biz.service;
 
+import com.aipark.biz.domain.image.Image;
 import com.aipark.biz.domain.image.ImageRepository;
 import com.aipark.biz.domain.member.Member;
 import com.aipark.biz.domain.member.MemberRepository;
@@ -188,6 +189,16 @@ public class ProjectService {
     public List<ProjectDto.ImageDto> sendAvatar() {
         return imageRepository.findImageByCategory().stream()
                 .map(ProjectDto.ImageDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProjectDto.ValueDto> sendValue(ProjectDto.AvatarRequest avatarRequest) {
+        String avatar = avatarRequest.getImageName();
+        String substring = avatar.substring(6);
+        System.out.println("substring = " + substring);
+        return imageRepository.findImagesByImageNameStartingWith(substring).stream()
+                .map(ProjectDto.ValueDto::new)
                 .collect(Collectors.toList());
     }
 
