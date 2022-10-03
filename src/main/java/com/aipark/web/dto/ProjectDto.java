@@ -241,4 +241,22 @@ public class ProjectDto {
         }
     }
 
+    @Getter
+    public static class ValueDto {
+        private String category;
+        private String imageUrl;
+
+        @Builder
+        public ValueDto(Image image) {
+            this.category = image.getCategory();
+            this.imageUrl = image.getImageUrl();
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class AvatarRequest {
+        private Long projectId;
+        private String imageName;
+    }
 }
