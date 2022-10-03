@@ -1,5 +1,6 @@
 package com.aipark.biz.service.file;
 
+import com.aipark.config.SecurityUtil;
 import com.aipark.exception.AwsErrorResult;
 import com.aipark.exception.AwsException;
 import com.aipark.web.dto.ProjectDto;
@@ -26,9 +27,12 @@ public class FileStore {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    @Value("${cloud.aws.s3.project}")
+    private String audioFileLocation;
+
     // S3의 파일 저장 경로
-    public String getFullPath(String fileName) {
-        return bucket + fileName;
+    public String getFullPath() {
+        return bucket + audioFileLocation + SecurityUtil.getCurrentMemberName();
     }
 
     // S3 에 저장
@@ -40,7 +44,7 @@ public class FileStore {
         String storeFileName = createStoreFileName(originalFilename);
         InputStream inputStream = multipartFile.getInputStream();
         ObjectMetadata objectMetadata = new ObjectMetadata();
-        amazonS3.putObject(new PutObjectRequest(bucket, storeFileName, inputStream, objectMetadata));
+        amazonS3.putObject(new PutObjectRequest(getFullPath(), storeFileName, inputStream, objectMetadata));
 
         return new ProjectDto.UploadFileDto(originalFilename, storeFileName);
     }
