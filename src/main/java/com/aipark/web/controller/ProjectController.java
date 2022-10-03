@@ -108,7 +108,7 @@ public class ProjectController {
      * @return "수정됐습니다."
      */
     @PutMapping("/edit/auto")
-    public ResponseEntity<String> ModificationPageAutoSave(@RequestBody ProjectDto.TextAutoSave requestDto) {
+    public ResponseEntity<String> ModificationPageAutoSave(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
         projectService.projectTextAutoSave(requestDto);
         return ResponseEntity.ok("수정됐습니다.");
     }
@@ -119,7 +119,7 @@ public class ProjectController {
      * @return ProjectDto.AvatarPage
      */
     @PutMapping("/edit/audio")
-    public ResponseEntity<ProjectDto.AvatarPage> moveAvatarPage(@RequestBody ProjectDto.TextAutoSave requestDto) {
+    public ResponseEntity<ProjectDto.AvatarPageResponse> moveAvatarPage(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
         projectService.projectTextAutoSave(requestDto);
         return ResponseEntity.ok(projectService.moveAvatarPage(requestDto));
     }
@@ -131,5 +131,25 @@ public class ProjectController {
     @GetMapping("/avatar")
     public ResponseEntity<List<ProjectDto.ImageDto>> sendAvatar() {
         return ResponseEntity.ok(projectService.sendAvatar());
+    }
+
+    /**
+     * 음성 생성 요청 시(문장별 음성 생성 제외)
+     * @param requestDto
+     * @return ProjectDto.TextAndUrlDto
+     */
+    @PostMapping("/audio/text")
+    public ResponseEntity<ProjectDto.TextAndUrlDto> makeAudioFile(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
+        return ResponseEntity.ok(projectService.makeAudioFile(requestDto));
+    }
+
+    /**
+     * 문장별 음성 파일 생성 요청 시(생성 버튼 눌렀을 때)
+     * @param requestDto
+     * @return ProjectDto.TextAndUrlDto
+     */
+    @PostMapping("/audio/sentence")
+    public ResponseEntity<ProjectDto.TextAndUrlDto> makeAudioBySentence(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
+        return ResponseEntity.ok(projectService.makeAudioBySentence(requestDto));
     }
 }

@@ -1,7 +1,11 @@
 package com.aipark.biz.service.file;
 
+import com.aipark.exception.AwsErrorResult;
+import com.aipark.exception.AwsException;
 import com.aipark.web.dto.ProjectDto;
+import com.aipark.web.dto.PythonServerDto;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +45,16 @@ public class FileStore {
         return new ProjectDto.UploadFileDto(originalFilename, storeFileName);
     }
 
+    // S3에서 파일 삭제
+    public boolean deleteFile(String oldAudio) {
+        try {
+            amazonS3.deleteObject(new DeleteObjectRequest(bucket, extractFileName(oldAudio)));
+        } catch (RuntimeException e) {
+            throw new AwsException(AwsErrorResult.AWS_ERROR);
+        }
+        return true;
+    }
+
     private String createStoreFileName(String originalFilename) {
         String ext = extractExt(originalFilename);
         String uuid = UUID.randomUUID().toString();
@@ -53,5 +67,10 @@ public class FileStore {
         int pos = originalFilename.lastIndexOf(".");
 
         return originalFilename.substring(pos + 1);
+    }
+
+    // S3의 파일 URL주소에서 파일 주소만 뽑아오기
+    private String extractFileName(String fileName) {
+        return fileName.split("com/")[1];
     }
 }
