@@ -1,9 +1,12 @@
 package com.aipark.web.dto;
 
+import com.aipark.biz.domain.image.Image;
 import com.aipark.biz.domain.project.Project;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +16,7 @@ public class ProjectDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class ProjectAutoRequest{
+    public static class ProjectAutoRequest {
         private Long projectId;
         private String projectName;
         private String avatarAudio;
@@ -49,7 +52,7 @@ public class ProjectDto {
         private String sex;
         private String avatarAudio;
 
-        public static TextResponse of(Project project){
+        public static TextResponse of(Project project) {
             return TextResponse.builder()
                     .text(project.getText())
                     .pitch(project.getPitch())
@@ -61,16 +64,17 @@ public class ProjectDto {
                     .build();
         }
     }
+
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
     public static class AudioResponse {
-        private String audioName;
+        private Long projectId;
 
-        public static AudioResponse of(Project project){
+        public static AudioResponse of(Project project) {
             return AudioResponse.builder()
-                    .audioName(project.getAudio())
+                    .projectId(project.getId())
                     .build();
         }
     }
@@ -117,7 +121,7 @@ public class ProjectDto {
             this.background = project.getBackground();
         }
 
-        public Project toEntity(){
+        public Project toEntity() {
             return Project.builder()
                     .projectName(projectName)
                     .avatarAudio(avatarAudio)
@@ -136,6 +140,21 @@ public class ProjectDto {
                     .background(background)
                     .build();
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class AudioRequest {
+        private MultipartFile audioFile;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class UploadFileDto {
+        // 유저가 업로드하는 파일명
+        private String uploadFileName;
+        // S3 에 저장될 파일명
+        private String storeFileName;
     }
 
     @Getter
@@ -168,4 +187,58 @@ public class ProjectDto {
         private String sentence;
         private String sentenceAudio;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class TextAndUrlDto {
+        private Long projectId;
+        private String text;
+        private String audioUrl;
+
+        public PythonServerDto.CreateAudioRequest toCreateAudioRequest(String username) {
+            return PythonServerDto.CreateAudioRequest.builder()
+                    .username(username)
+                    .narration("none")
+                    .text(text)
+                    .projectId(projectId)
+                    .build();
+        }
+
+        public ProjectDto.TextAndUrlDto of(String url) {
+            return TextAndUrlDto.builder()
+                    .projectId(projectId)
+                    .text(text)
+                    .audioUrl(url)
+                    .build();
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class AvatarPageResponse {
+        private Long projectId;
+        private String avatar;
+        private String category1;
+        private String category2;
+        private String category3;
+        private String background;
+    }
+
+    // avatar 리스트 전달
+    @Getter
+    public static class ImageDto {
+        private String imageName;
+        private String imageUrl;
+
+        @Builder
+        public ImageDto(Image image) {
+            this.imageName = image.getCategory();
+            this.imageUrl = image.getImageUrl();
+        }
+    }
+
 }
