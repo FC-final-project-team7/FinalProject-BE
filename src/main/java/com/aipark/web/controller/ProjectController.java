@@ -142,6 +142,16 @@ public class ProjectController {
     }
 
     /**
+     * 아바타 선택 페이지 자동 저장 요청 시
+     * @param selectedAvatarValue
+     * @return "프로젝트 자동 저장 완료"
+     */
+    @PutMapping("/avatar/auto")
+    public ResponseEntity<String> selectValue(@RequestBody ProjectDto.AvatarPageDto selectedAvatarValue) {
+        projectService.avatarAutoSave(selectedAvatarValue);
+        return ResponseEntity.ok("프로젝트가 자동 저장 완료되었습니다.");
+    }
+    /**
      * 음성 생성 요청 시(문장별 음성 생성 제외)
      * @param requestDto
      * @return ProjectDto.TextAndUrlDto
