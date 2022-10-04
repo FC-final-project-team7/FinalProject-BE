@@ -48,10 +48,11 @@ public class ProjectController {
      *         isAudio;         : 음성 업로드 유/무
      * @return projectDto
      */
-    @PostMapping("/auto")
+    @PostMapping("/edit/auto")
     public ResponseEntity<String> projectAutoUpdate(@RequestBody ProjectDto.ProjectAutoRequest requestDto){
         return ResponseEntity.ok("수정됐습니다.");
     }
+
     @GetMapping
     public ResponseEntity<List<ProjectDto.BasicDto>> getProjectList(){
         return ResponseEntity.ok(projectService.getProjectList());
@@ -166,5 +167,16 @@ public class ProjectController {
     @PostMapping("/audio/sentence")
     public ResponseEntity<ProjectDto.TextAndUrlDto> makeAudioBySentence(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
         return ResponseEntity.ok(projectService.makeAudioBySentence(requestDto));
+    }
+
+    /**
+     * 프로젝트 완성
+     * TODO 반환값 정해주기
+     */
+    @PutMapping("/avatar/category")
+    public ResponseEntity<String> completedProject(@RequestBody ProjectDto.AvatarPageDto avatarPageRequestDto){
+        projectService.completedProject(avatarPageRequestDto);
+
+        return ResponseEntity.ok("프로젝트가 완성되었습니다.");
     }
 }
