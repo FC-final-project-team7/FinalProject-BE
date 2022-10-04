@@ -179,8 +179,9 @@ public class Project {
     }
 
     // 선택된 카테고리 입력
-    public void setCategories(ProjectDto.SelectedAvatarValue selectedAvatarValue) {
+    public void setCategories(ProjectDto.AvatarPageDto selectedAvatarValue) {
         if (selectedAvatarValue != null) {
+            this.avatar = selectedAvatarValue.getAvatar();
             this.category1 = selectedAvatarValue.getCategory1();
             this.category2 = selectedAvatarValue.getCategory2();
             this.category3 = selectedAvatarValue.getCategory3();

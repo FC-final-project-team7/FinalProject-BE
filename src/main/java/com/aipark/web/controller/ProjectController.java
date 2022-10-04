@@ -142,16 +142,6 @@ public class ProjectController {
     }
 
     /**
-     * 아바타 value 선택 완료 시
-     * @param selectedAvatarValue
-     * @return "완료되었습니다."
-     */
-    @PutMapping("/avatar/category")
-    public ResponseEntity<String> selectValue(@RequestBody ProjectDto.SelectedAvatarValue selectedAvatarValue) {
-        projectService.completeProject(selectedAvatarValue);
-        return ResponseEntity.ok("프로젝트 완료");
-    }
-    /**
      * 음성 생성 요청 시(문장별 음성 생성 제외)
      * @param requestDto
      * @return ProjectDto.TextAndUrlDto
@@ -177,6 +167,7 @@ public class ProjectController {
      */
     @PutMapping("/avatar/category")
     public ResponseEntity<String> completedProject(@RequestBody ProjectDto.AvatarPageDto avatarPageRequestDto){
+        projectService.avatarAutoSave(avatarPageRequestDto);
         projectService.completedProject(avatarPageRequestDto);
 
         return ResponseEntity.ok("프로젝트가 완성되었습니다.");

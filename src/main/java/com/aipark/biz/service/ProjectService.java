@@ -216,7 +216,7 @@ public class ProjectService {
      * @param selectedAvatarValue
      */
     @Transactional
-    public void completeProject(ProjectDto.SelectedAvatarValue selectedAvatarValue) {
+    public void avatarAutoSave(ProjectDto.AvatarPageDto selectedAvatarValue) {
         Project project = projectRepository.findById(selectedAvatarValue.getProjectId()).orElseThrow(
                 ()->new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
         project.setCategories(selectedAvatarValue);
