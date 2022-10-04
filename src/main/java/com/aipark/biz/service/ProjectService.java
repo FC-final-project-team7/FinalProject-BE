@@ -150,17 +150,17 @@ public class ProjectService {
      * @return ProjectDto.AvatarPage
      */
     @Transactional
-    public ProjectDto.AvatarPageResponse moveAvatarPage(ProjectDto.TextAndUrlDto requestDto) {
+    public ProjectDto.AvatarPageDto moveAvatarPage(ProjectDto.TextAndUrlDto requestDto) {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
         Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
-        PythonServerDto.AudioResponse responseDto = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
+        PythonServerDto.PythonResponse responseDto = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
 
         project.updateProjectAudioUrl(responseDto);
 
-        ProjectDto.AvatarPageResponse avatarPageResponseDto = project.createAvatarPageDto();
+        ProjectDto.AvatarPageDto avatarPageResponseDto = project.createAvatarPageDto();
 
         return avatarPageResponseDto;
     }
@@ -178,7 +178,7 @@ public class ProjectService {
         Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
-        PythonServerDto.AudioResponse audioFile = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
+        PythonServerDto.PythonResponse audioFile = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
 
         fileStore.deleteFile(project.getAudio_uuid());
 

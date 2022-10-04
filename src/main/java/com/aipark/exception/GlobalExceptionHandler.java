@@ -2,7 +2,6 @@ package com.aipark.exception;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -30,9 +29,9 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
-    @ExceptionHandler(PythonServerException.class)
-    public ResponseEntity<ErrorResponse> pythonServerException(PythonServerException pythonServerException){
-        PythonServerErrorResult errorResult = pythonServerException.getPythonServerErrorResult();
+    @ExceptionHandler(PythonException.class)
+    public ResponseEntity<ErrorResponse> pythonServerException(PythonException pythonServerException){
+        PythonErrorResult errorResult = pythonServerException.getPythonServerErrorResult();
         return ResponseEntity.status(errorResult.getHttpStatus()).body(
                 ErrorResponse.builder()
                         .code(errorResult.getHttpStatus().name())

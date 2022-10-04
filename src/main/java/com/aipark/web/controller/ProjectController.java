@@ -124,7 +124,7 @@ public class ProjectController {
      * @return ProjectDto.AvatarPage
      */
     @PutMapping("/edit/audio")
-    public ResponseEntity<ProjectDto.AvatarPageResponse> moveAvatarPage(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
+    public ResponseEntity<ProjectDto.AvatarPageDto> moveAvatarPage(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
         projectService.projectTextAutoSave(requestDto);
         return ResponseEntity.ok(projectService.moveAvatarPage(requestDto));
     }
