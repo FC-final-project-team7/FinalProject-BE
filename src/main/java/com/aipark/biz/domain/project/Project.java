@@ -157,13 +157,13 @@ public class Project {
     }
 
     // 아바타선택 페이지로 넘어갈 때 생성되는 음성파일의 주소와 이름을 저장하는 메소드
-    public void updateProjectAudioUrl(PythonServerDto.AudioResponse requestDto) {
+    public void updateProjectAudioUrl(PythonServerDto.PythonResponse requestDto) {
         this.audio = this.projectName + ".wav";
         this.audio_uuid = requestDto.getUrl();
     }
 
-    public ProjectDto.AvatarPageResponse createAvatarPageDto(){
-        return ProjectDto.AvatarPageResponse.builder()
+    public ProjectDto.AvatarPageDto createAvatarPageDto(){
+        return ProjectDto.AvatarPageDto.builder()
                 .projectId(id)
                 .avatar(avatar)
                 .category1(category1)
