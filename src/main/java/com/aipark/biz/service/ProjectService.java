@@ -16,6 +16,7 @@ import com.aipark.web.dto.ProjectDto;
 import com.aipark.web.dto.PythonServerDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -258,7 +259,7 @@ public class ProjectService {
         PythonServerDto.PythonResponse videoFile = pythonService.createVideoFile(videoRequestDto);
 
         // url에 비디오 생성
-        Video video = Video.createVideo(videoFile.getUrl());
+        Video video = Video.createVideo(videoFile.getUrl(), project.getProjectName());
 
         // member에 video 저장
         project.getMember().addVideo(video);
@@ -268,5 +269,25 @@ public class ProjectService {
 
         // tempAudio 삭제
         tempAudioRepository.deleteAllByProject(project);
+    }
+
+    // 영상 리스트
+    public List<ProjectDto.VideoListResponse> getVideoList() {
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
+
+        return videoRepository.findAllByMember(member)
+                .stream()
+                .map(ProjectDto.VideoListResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    // 영상 조회
+    @Transactional(readOnly = true)
+    public ProjectDto.VideoResponse getVideo(Long videoId) {
+        Video video = videoRepository.findById(videoId).orElseThrow(
+                () -> new ProjectException(ProjectErrorResult.VIDEO_NOT_FOUND));
+
+        return ProjectDto.VideoResponse.of(video);
     }
 }

@@ -163,7 +163,7 @@ public class ProjectController {
 
     /**
      * 프로젝트 완성
-     * TODO 반환값 정해주기
+     *
      */
     @PutMapping("/avatar/category")
     public ResponseEntity<String> completedProject(@RequestBody ProjectDto.AvatarPageDto avatarPageRequestDto){
@@ -171,5 +171,15 @@ public class ProjectController {
         projectService.completedProject(avatarPageRequestDto);
 
         return ResponseEntity.ok("프로젝트가 완성되었습니다.");
+    }
+
+    @GetMapping("/videos")
+    public ResponseEntity<List<ProjectDto.VideoListResponse>> getVideoList(){
+        return ResponseEntity.ok(projectService.getVideoList());
+    }
+
+    @GetMapping("/videos/{videoId}")
+    public ResponseEntity<ProjectDto.VideoResponse> getVideo(@PathVariable("videoId") Long videoId){
+        return ResponseEntity.ok(projectService.getVideo(videoId));
     }
 }

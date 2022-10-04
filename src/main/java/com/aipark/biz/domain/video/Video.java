@@ -1,5 +1,6 @@
 package com.aipark.biz.domain.video;
 
+import com.aipark.biz.domain.BaseTimeEntity;
 import com.aipark.biz.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,11 +14,13 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "VIDEO")
 @Entity
-public class Video {
+public class Video extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String projectName;
 
     private String videoUrl;
 
@@ -26,13 +29,16 @@ public class Video {
     private Member member;
 
     @Builder
-    public Video(String videoUrl, Member member) {
+    public Video(String videoUrl, String projectName) {
         this.videoUrl = videoUrl;
-        this.member = member;
+        this.projectName = projectName;
     }
 
-    public static Video createVideo(String videoUrl){
-        return Video.builder().videoUrl(videoUrl).build();
+    public static Video createVideo(String videoUrl, String projectName){
+        return Video.builder()
+                .videoUrl(videoUrl)
+                .projectName(projectName)
+                .build();
     }
 
     public void setMember(Member member){

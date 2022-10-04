@@ -2,11 +2,14 @@ package com.aipark.web.dto;
 
 import com.aipark.biz.domain.image.Image;
 import com.aipark.biz.domain.project.Project;
+import com.aipark.biz.domain.video.Video;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -268,5 +271,40 @@ public class ProjectDto {
         private String category2;
         private String category3;
         private String background;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    public static class VideoListResponse{
+        private Long id;
+        private String name;
+        private Boolean generated;
+        private LocalDateTime createdDate;
+        private String thumbnail;
+
+        public VideoListResponse(Video video) {
+            this.id = video.getId();
+            this.name = video.getProjectName();
+            this.generated = true;
+            this.createdDate = video.getCreatedDate();
+            this.thumbnail = "";
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class VideoResponse{
+        private String projectName;
+        private String videoAddress;
+
+        public static VideoResponse of(Video video){
+            return VideoResponse
+                    .builder()
+                    .projectName(video.getProjectName())
+                    .videoAddress(video.getVideoUrl())
+                    .build();
+        }
     }
 }
