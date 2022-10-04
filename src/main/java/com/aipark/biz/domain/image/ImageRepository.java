@@ -11,5 +11,5 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     List<Image> findImageByCategory();
 
     // 아바타 밸류 전달하는 메서드
-    List<Image> findImagesByImageNameStartingWith(String condition);
+    List<Image> findImagesByImageNameStartingWithOrCategoryStartingWith(String condition, String background);
 }
