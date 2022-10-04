@@ -59,6 +59,8 @@ public class SecurityConfig {
                         , "/swagger/**"
                         , "/favicon.ico"
                         , "/members/check-id"
+                        , "/mails/**"
+                        , "/members/edit-pwd"
                 ).permitAll()
                 .anyRequest().authenticated()
 

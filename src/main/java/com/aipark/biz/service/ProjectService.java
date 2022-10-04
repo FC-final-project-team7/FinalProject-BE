@@ -91,6 +91,22 @@ public class ProjectService {
 
     @Transactional
     public void deleteProject(Long projectId) {
+        Project project = projectRepository.findById(projectId).orElseThrow(
+                () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
+
+        // project에 저장되어있는 음성파일 삭제
+        fileStore.deleteFile(project.getAudio_uuid());
+
+        // tempAudio에 저장되어있는 음성파일들 삭제
+        List<TempAudio> tempAudioList = tempAudioRepository.findAllByProject(project);
+        if (!tempAudioList.isEmpty()) {
+            for (TempAudio tempAudio : tempAudioList) {
+                fileStore.deleteFile(tempAudio.getTempUrl());
+            }
+        }
+
+        // 테이블에 있는 데이터 삭제
+        tempAudioRepository.deleteAllByProject(project);
         projectRepository.deleteById(projectId);
     }
 
@@ -265,6 +281,14 @@ public class ProjectService {
 
         // video 저장
         videoRepository.save(video);
+
+        // tempAudio에 저장되어있는 음성파일들 삭제
+        List<TempAudio> tempAudioList = tempAudioRepository.findAllByProject(project);
+        if (!tempAudioList.isEmpty()) {
+            for (TempAudio tempAudio : tempAudioList) {
+                fileStore.deleteFile(tempAudio.getTempUrl());
+            }
+        }
 
         // tempAudio 삭제
         tempAudioRepository.deleteAllByProject(project);
