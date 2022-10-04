@@ -93,6 +93,7 @@ public class ProjectService {
 
     /**
      * 로그인한 사용자의 프로젝트에 접근했는지 체크해주는 메소드
+     *
      * @param projectUsername
      * @return
      */
@@ -114,6 +115,7 @@ public class ProjectService {
     /**
      * 수정페이지로 넘어오면 문장별 음성 생성 요청을 파이썬 서버에 보낸다.
      * 그리고 받은 문장별 음성 파일의 주소를 테이블에 저장한다.
+     *
      * @param requestDto
      * @return ProjectDto.ModificationPageResponse
      */
@@ -131,6 +133,7 @@ public class ProjectService {
 
     /**
      * 수정페이지에서 자동저장 api가 오면 전체 텍스트만 업데이트 해준다.
+     *
      * @param requestDto
      */
     @Transactional
@@ -142,6 +145,7 @@ public class ProjectService {
 
     /**
      * 텍스트로 음성 파일 생성 요청을 파이썬에 보내고, 받은 파일명과 주소를 project에 저장한다.
+     *
      * @param requestDto
      * @return ProjectDto.AvatarPage
      */
@@ -163,6 +167,7 @@ public class ProjectService {
 
     /**
      * 음성생성 요청시, 기존의 파일을 삭제하고 새로운 파일을 저장한다.
+     *
      * @param requestDto
      * @return ProjectDto.TextAndUrlDto
      */
@@ -188,6 +193,18 @@ public class ProjectService {
     public List<ProjectDto.ImageDto> sendAvatar() {
         return imageRepository.findImageByCategory().stream()
                 .map(ProjectDto.ImageDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ProjectDto.ValueDto> sendValue(ProjectDto.AvatarRequest avatarRequest) {
+        Project project = projectRepository.findById(avatarRequest.getProjectId()).orElseThrow();
+        project.setAvatar(avatarRequest.getImageName());
+
+        String avatar = avatarRequest.getImageName();
+        String substring = avatar.substring(6);
+        return imageRepository.findImagesByImageNameStartingWithOrCategoryStartingWith(substring,"BACKGROUND").stream()
+                .map(ProjectDto.ValueDto::new)
                 .collect(Collectors.toList());
     }
 

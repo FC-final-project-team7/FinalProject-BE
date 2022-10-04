@@ -139,6 +139,16 @@ public class ProjectController {
     }
 
     /**
+     * 아바타 value 요청 시(아바타 리스트 선택 하였을 때)
+     * @param avatarRequest
+     * @return ProjectDto.ValueDto 리스트
+     */
+    @PutMapping("/avatar")
+    public ResponseEntity<List<ProjectDto.ValueDto>> sendValue(@RequestBody ProjectDto.AvatarRequest avatarRequest) {
+        return ResponseEntity.ok(projectService.sendValue(avatarRequest));
+    }
+
+    /**
      * 음성 생성 요청 시(문장별 음성 생성 제외)
      * @param requestDto
      * @return ProjectDto.TextAndUrlDto
