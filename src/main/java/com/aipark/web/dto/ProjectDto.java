@@ -47,6 +47,7 @@ public class ProjectDto {
     @AllArgsConstructor
     @Builder
     public static class TextResponse {
+        private Long projectId;
         private String text;
         private Double pitch;
         private Double speed;
@@ -57,6 +58,7 @@ public class ProjectDto {
 
         public static TextResponse of(Project project) {
             return TextResponse.builder()
+                    .projectId(project.getId())
                     .text(project.getText())
                     .pitch(project.getPitch())
                     .speed(project.getSpeed())
