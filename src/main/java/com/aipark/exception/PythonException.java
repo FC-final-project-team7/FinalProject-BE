@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class PythonServerException extends RuntimeException{
-    private final PythonServerErrorResult pythonServerErrorResult;
+public class PythonException extends RuntimeException{
+    private final PythonErrorResult pythonServerErrorResult;
 }

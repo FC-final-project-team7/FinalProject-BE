@@ -5,8 +5,8 @@ import com.aipark.biz.domain.project.ProjectRepository;
 import com.aipark.biz.domain.tempAudio.TempAudioRepository;
 import com.aipark.exception.ProjectErrorResult;
 import com.aipark.exception.ProjectException;
-import com.aipark.exception.PythonServerErrorResult;
-import com.aipark.exception.PythonServerException;
+import com.aipark.exception.PythonErrorResult;
+import com.aipark.exception.PythonException;
 import com.aipark.web.dto.ProjectDto;
 import com.aipark.web.dto.PythonServerDto;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +30,32 @@ public class PythonService {
     private final TempAudioRepository tempAudioRepository;
     private final ProjectRepository projectRepository;
 
+
+    public PythonServerDto.PythonResponse createVideoFile(PythonServerDto.VideoRequest request) {
+        // Http 통신 body에 들어갈 json 객체 생성
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("username", request.getUsername());
+        jsonObject.put("audio_name", request.getAudioName());
+        jsonObject.put("avatar", request.getAvatar());
+        jsonObject.put("background", request.getBackground());
+        jsonObject.put("project_name", request.getProjectName());
+
+        // webClient를 사용하여 서버간 통신
+        PythonServerDto.PythonResponse response = buildWebClient().post()
+                .uri("/video")
+                .body(Mono.just(jsonObject.toString()), JSONObject.class)
+                .retrieve()
+                .bodyToMono(PythonServerDto.PythonResponse.class)
+                .block();
+
+        // 파이썬 서버에서 제대로 생성이 안되면 fail이 들어온다.
+        if (response.getStatus().equals("fail")) {
+            throw new PythonException(PythonErrorResult.AUDIO_CREATE_ERROR);
+        }
+
+        // 오디오들을 임시 음성 테이블에 저장한다.
+        return response;
+    }
     /**
      * 입력 페이지에서 수정 페이지로 넘어갈 때, 파이썬에 문장별 음성 파일 생성 요청할 때,
      * @param request
@@ -55,7 +81,7 @@ public class PythonService {
 
         // 파이썬 서버에서 제대로 생성이 안되면 fail이 들어온다.
         if (response.getStatus().equals("fail")) {
-            throw new PythonServerException(PythonServerErrorResult.AUDIO_CREATE_ERROR);
+            throw new PythonException(PythonErrorResult.AUDIO_CREATE_ERROR);
         }
 
         // 오디오들을 임시 음성 테이블에 저장한다.
@@ -70,7 +96,7 @@ public class PythonService {
      * @param requestDto
      * @return
      */
-    public PythonServerDto.AudioResponse createAudioFile(PythonServerDto.CreateAudioRequest requestDto) {
+    public PythonServerDto.PythonResponse createAudioFile(PythonServerDto.CreateAudioRequest requestDto) {
 
         // Http 통신 body에 들어갈 json 객체 생성
         JSONObject jsonObject = new JSONObject();
@@ -79,16 +105,16 @@ public class PythonService {
         jsonObject.put("narration", "none");
 
         // webClient를 사용하여 서버간 통신
-        PythonServerDto.AudioResponse responseDto = buildWebClient().post()
+        PythonServerDto.PythonResponse responseDto = buildWebClient().post()
                 .uri("/audios")
                 .body(Mono.just(jsonObject.toString()), JSONObject.class)
                 .retrieve()
-                .bodyToMono(PythonServerDto.AudioResponse.class)
+                .bodyToMono(PythonServerDto.PythonResponse.class)
                 .block();
 
         // 파이썬 서버에서 제대로 생성이 안되면 fail이 들어온다.
         if (responseDto.getStatus().equals("fail")) {
-            throw new PythonServerException(PythonServerErrorResult.AUDIO_CREATE_ERROR);
+            throw new PythonException(PythonErrorResult.AUDIO_CREATE_ERROR);
         }
 
         return responseDto;

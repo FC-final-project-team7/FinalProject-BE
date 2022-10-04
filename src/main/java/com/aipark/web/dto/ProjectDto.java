@@ -219,7 +219,7 @@ public class ProjectDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class AvatarPageResponse {
+    public static class AvatarPageDto {
         private Long projectId;
         private String avatar;
         private String category1;

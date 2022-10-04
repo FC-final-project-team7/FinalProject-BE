@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
 @Getter
-public enum PythonServerErrorResult {
+public enum PythonErrorResult {
 
     AUDIO_CREATE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "다시 요청해주세요.");
 

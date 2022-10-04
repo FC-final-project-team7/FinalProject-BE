@@ -2,13 +2,17 @@ package com.aipark.web.dto;
 
 import com.aipark.biz.domain.project.Project;
 import com.aipark.biz.domain.tempAudio.TempAudio;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+@Slf4j
 public class PythonServerDto {
 
     @Getter
@@ -58,8 +62,38 @@ public class PythonServerDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class AudioResponse {
+    @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class PythonResponse {
         private String status;
         private String url;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class VideoRequest{
+        private String username;
+        private String audioName;
+        private String avatar;
+        private String background;
+        private String projectName;
+
+        public static VideoRequest of(Project project){
+            return VideoRequest.builder()
+                    .username(project.getMember().getUsername())
+                    .audioName(changeAudio(project.getAudio_uuid()))
+                    .avatar(project.getAvatar())
+                    .background(project.getBackground())
+                    .projectName(project.getProjectName())
+                    .build();
+        }
+        // temp.wav -> temp
+        public static String changeAudio(String audioName){
+            String[] str = audioName.split("[/]");
+            String result = str[str.length-1].split("[.]")[0];
+            log.info("UUID 분리 ㅣ: {}", result);
+            return result;
+        }
     }
 }
