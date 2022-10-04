@@ -7,6 +7,8 @@ import com.aipark.biz.domain.project.Project;
 import com.aipark.biz.domain.project.ProjectRepository;
 import com.aipark.biz.domain.tempAudio.TempAudio;
 import com.aipark.biz.domain.tempAudio.TempAudioRepository;
+import com.aipark.biz.domain.video.Video;
+import com.aipark.biz.domain.video.VideoRepository;
 import com.aipark.biz.service.file.FileStore;
 import com.aipark.config.SecurityUtil;
 import com.aipark.exception.*;
@@ -32,6 +34,7 @@ public class ProjectService {
     private final PythonService pythonService;
     private final ImageRepository imageRepository;
     private final TempAudioRepository tempAudioRepository;
+    private final VideoRepository videoRepository;
 
 
     @Transactional
@@ -150,17 +153,17 @@ public class ProjectService {
      * @return ProjectDto.AvatarPage
      */
     @Transactional
-    public ProjectDto.AvatarPageResponse moveAvatarPage(ProjectDto.TextAndUrlDto requestDto) {
+    public ProjectDto.AvatarPageDto moveAvatarPage(ProjectDto.TextAndUrlDto requestDto) {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
         Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
-        PythonServerDto.AudioResponse responseDto = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
+        PythonServerDto.PythonResponse responseDto = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
 
         project.updateProjectAudioUrl(responseDto);
 
-        ProjectDto.AvatarPageResponse avatarPageResponseDto = project.createAvatarPageDto();
+        ProjectDto.AvatarPageDto avatarPageResponseDto = project.createAvatarPageDto();
 
         return avatarPageResponseDto;
     }
@@ -178,7 +181,7 @@ public class ProjectService {
         Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
-        PythonServerDto.AudioResponse audioFile = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
+        PythonServerDto.PythonResponse audioFile = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
 
         fileStore.deleteFile(project.getAudio_uuid());
 
@@ -213,7 +216,7 @@ public class ProjectService {
      * @param selectedAvatarValue
      */
     @Transactional
-    public void completeProject(ProjectDto.SelectedAvatarValue selectedAvatarValue) {
+    public void avatarAutoSave(ProjectDto.AvatarPageDto selectedAvatarValue) {
         Project project = projectRepository.findById(selectedAvatarValue.getProjectId()).orElseThrow(
                 ()->new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
         project.setCategories(selectedAvatarValue);
@@ -232,12 +235,38 @@ public class ProjectService {
         TempAudio tempAudio = tempAudioRepository.findByTempUrl(requestDto.getAudioUrl()).orElseThrow(
                 () -> new TempAudioException(TempAudioErrorResult.TEMP_AUDIO_NOT_FOUND));
 
-        PythonServerDto.AudioResponse response = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
+        PythonServerDto.PythonResponse response = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
 
         fileStore.deleteFile(requestDto.getAudioUrl());
 
         tempAudio.updateTempUrl(response.getUrl());
 
         return requestDto.of(response.getUrl());
+    }
+
+    @Transactional
+    public void completedProject(ProjectDto.AvatarPageDto avatarPageRequestDto) {
+        // 아바타 페이지 자동저장
+        // Dto 생성
+        Project project = projectRepository.findById((avatarPageRequestDto.getProjectId())).orElseThrow(
+                () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
+
+        // request Dto 생성
+        PythonServerDto.VideoRequest videoRequestDto = PythonServerDto.VideoRequest.of(project);
+
+        // 비디오 파일 생성
+        PythonServerDto.PythonResponse videoFile = pythonService.createVideoFile(videoRequestDto);
+
+        // url에 비디오 생성
+        Video video = Video.createVideo(videoFile.getUrl());
+
+        // member에 video 저장
+        project.getMember().addVideo(video);
+
+        // video 저장
+        videoRepository.save(video);
+
+        // tempAudio 삭제
+        tempAudioRepository.deleteAllByProject(project);
     }
 }

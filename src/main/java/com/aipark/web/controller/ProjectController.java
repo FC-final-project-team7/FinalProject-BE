@@ -27,6 +27,11 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.textSave());
     }
 
+    @PostMapping("/auto")
+    public void projectUpdate(@RequestBody ProjectDto.ProjectAutoRequest requestDto){
+        projectService.textAutoSave(requestDto);
+    }
+
     /**
      * 텍스트 입력에서 자동저장
      * @RequestBody 자동저장을 위한 데이터(
@@ -43,10 +48,11 @@ public class ProjectController {
      *         isAudio;         : 음성 업로드 유/무
      * @return projectDto
      */
-    @PostMapping("/auto")
+    @PostMapping("/edit/auto")
     public ResponseEntity<String> projectAutoUpdate(@RequestBody ProjectDto.ProjectAutoRequest requestDto){
         return ResponseEntity.ok("수정됐습니다.");
     }
+
     @GetMapping
     public ResponseEntity<List<ProjectDto.BasicDto>> getProjectList(){
         return ResponseEntity.ok(projectService.getProjectList());
@@ -111,7 +117,7 @@ public class ProjectController {
      * @return ProjectDto.AvatarPage
      */
     @PutMapping("/edit/audio")
-    public ResponseEntity<ProjectDto.AvatarPageResponse> moveAvatarPage(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
+    public ResponseEntity<ProjectDto.AvatarPageDto> moveAvatarPage(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
         projectService.projectTextAutoSave(requestDto);
         return ResponseEntity.ok(projectService.moveAvatarPage(requestDto));
     }
@@ -163,5 +169,17 @@ public class ProjectController {
     @PostMapping("/audio/sentence")
     public ResponseEntity<ProjectDto.TextAndUrlDto> makeAudioBySentence(@RequestBody ProjectDto.TextAndUrlDto requestDto) {
         return ResponseEntity.ok(projectService.makeAudioBySentence(requestDto));
+    }
+
+    /**
+     * 프로젝트 완성
+     * TODO 반환값 정해주기
+     */
+    @PutMapping("/avatar/category")
+    public ResponseEntity<String> completedProject(@RequestBody ProjectDto.AvatarPageDto avatarPageRequestDto){
+        projectService.avatarAutoSave(avatarPageRequestDto);
+        projectService.completedProject(avatarPageRequestDto);
+
+        return ResponseEntity.ok("프로젝트가 완성되었습니다.");
     }
 }
