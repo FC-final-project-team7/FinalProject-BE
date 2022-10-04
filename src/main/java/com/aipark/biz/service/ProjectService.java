@@ -212,6 +212,17 @@ public class ProjectService {
     }
 
     /**
+     * 입력받은 value 및 배경 저장
+     * @param selectedAvatarValue
+     */
+    @Transactional
+    public void completeProject(ProjectDto.SelectedAvatarValue selectedAvatarValue) {
+        Project project = projectRepository.findById(selectedAvatarValue.getProjectId()).orElseThrow(
+                ()->new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
+        project.setCategories(selectedAvatarValue);
+    }
+
+    /**
      * 문장별 음성 파일 생성 요청 시(생성 버튼 눌렀을 때)
      * s3에 저장되어있는 파일은 삭제하고, tempAudio 테이블의 주소를 바꿔준다.
      * @param requestDto

@@ -99,7 +99,7 @@ public class Project {
     public static Project defaultCreate_audio(String audio, String audio_uuid){
         return Project.builder()
                 .projectName("임시프로젝트명")
-                .avatarAudio("")
+                .avatarAudio("임시오디오명")
                 .sex("")
                 .language("")
                 .durationSilence(-1.0)
@@ -175,6 +175,16 @@ public class Project {
     public void setAvatar(String avatar) {
         if (avatar != null) {
             this.avatar = avatar;
+        }
+    }
+
+    // 선택된 카테고리 입력
+    public void setCategories(ProjectDto.SelectedAvatarValue selectedAvatarValue) {
+        if (selectedAvatarValue != null) {
+            this.category1 = selectedAvatarValue.getCategory1();
+            this.category2 = selectedAvatarValue.getCategory2();
+            this.category3 = selectedAvatarValue.getCategory3();
+            this.background = selectedAvatarValue.getBackground();
         }
     }
 }
