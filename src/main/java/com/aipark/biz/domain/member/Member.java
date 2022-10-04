@@ -3,6 +3,7 @@ package com.aipark.biz.domain.member;
 import com.aipark.biz.domain.BaseTimeEntity;
 import com.aipark.biz.domain.enums.Authority;
 import com.aipark.biz.domain.project.Project;
+import com.aipark.biz.domain.video.Video;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -44,6 +45,9 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private final List<Project> projectList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private final List<Video> videoList = new ArrayList<>();
+
     @Builder
     public Member(String username, String email, String password, String name, String phoneNumber, Authority authority) {
         this.username = username;
@@ -63,6 +67,13 @@ public class Member extends BaseTimeEntity {
 
     public void changePassword(String newPassword) {
         this.password = newPassword;
+    }
+
+    public void addVideo(Video video) {
+        this.videoList.add(video);
+        if(video.getMember() != this){
+            video.setMember(this);
+        }
     }
 }
 
