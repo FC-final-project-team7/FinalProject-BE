@@ -54,15 +54,7 @@ public class ProjectController {
 
     /**
      * 음성 업로드로 프로젝트 만들 때
-<<<<<<< HEAD
-<<<<<<< Updated upstream
      * @ModelAttribute projectId(프로젝트 id)
-=======
-     * @RequestBody projectId(프로젝트 id)
->>>>>>> Stashed changes
-=======
-     * @RequestBody projectId(프로젝트 id)
->>>>>>> 5d233a0752efcfa52e68436493c440f3455fc162
      * @return
      */
     @PostMapping("/audio")
@@ -143,6 +135,16 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.sendValue(avatarRequest));
     }
 
+    /**
+     * 아바타 value 선택 완료 시
+     * @param selectedAvatarValue
+     * @return "완료되었습니다."
+     */
+    @PutMapping("/avatar/category")
+    public ResponseEntity<String> selectValue(@RequestBody ProjectDto.SelectedAvatarValue selectedAvatarValue) {
+        projectService.completeProject(selectedAvatarValue);
+        return ResponseEntity.ok("프로젝트 완료");
+    }
     /**
      * 음성 생성 요청 시(문장별 음성 생성 제외)
      * @param requestDto
