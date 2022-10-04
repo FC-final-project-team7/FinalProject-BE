@@ -1,5 +1,6 @@
 package com.aipark.biz.service;
 
+import com.aipark.biz.domain.image.Image;
 import com.aipark.biz.domain.image.ImageRepository;
 import com.aipark.biz.domain.member.Member;
 import com.aipark.biz.domain.member.MemberRepository;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -188,6 +190,19 @@ public class ProjectService {
     public List<ProjectDto.ImageDto> sendAvatar() {
         return imageRepository.findImageByCategory().stream()
                 .map(ProjectDto.ImageDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ProjectDto.ValueDto> sendValue(ProjectDto.AvatarRequest avatarRequest) {
+        Project project = projectRepository.findById(avatarRequest.getProjectId()).orElseThrow();
+        project.setAvatar(avatarRequest.getImageName());
+
+        String avatar = avatarRequest.getImageName();
+        String substring = avatar.substring(6);
+        System.out.println("substring = " + substring);
+        return imageRepository.findImagesByImageNameStartingWith(substring).stream()
+                .map(ProjectDto.ValueDto::new)
                 .collect(Collectors.toList());
     }
 
