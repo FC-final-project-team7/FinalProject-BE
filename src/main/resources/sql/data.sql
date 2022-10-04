@@ -142,3 +142,9 @@ INSERT INTO IMAGE(CATEGORY, IMAGE_NAME, IMAGE_URL) VALUES
 ('7-3-1', '7-3-1.png', 'https://jkproject.s3.ap-northeast-2.amazonaws.com/avatar_list/avatar7/avatar_value/7-3-1.png'),
 ('7-3-2', '7-3-2.png', 'https://jkproject.s3.ap-northeast-2.amazonaws.com/avatar_list/avatar7/avatar_value/7-3-2.png'),
 ('7-3-3', '7-3-3.png', 'https://jkproject.s3.ap-northeast-2.amazonaws.com/avatar_list/avatar7/avatar_value/7-3-3.png');
+-- Background
+INSERT INTO IMAGE(CATEGORY, IMAGE_NAME, IMAGE_URL) values
+('BACKGROUND0', 'BG_0.png', 'https://jkproject.s3.ap-northeast-2.amazonaws.com/background/BG_0.png'),
+('BACKGROUND1', 'BG_1.png', 'https://jkproject.s3.ap-northeast-2.amazonaws.com/background/BG_1.png'),
+('BACKGROUND2', 'BG_2.png', 'https://jkproject.s3.ap-northeast-2.amazonaws.com/background/BG_2.png'),
+('BACKGROUND3', 'BG_3.png', 'https://jkproject.s3.ap-northeast-2.amazonaws.com/background/BG_3.png');
