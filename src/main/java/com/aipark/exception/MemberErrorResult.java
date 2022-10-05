@@ -13,7 +13,6 @@ public enum MemberErrorResult {
     MEMBER_INCORRECT(HttpStatus.FORBIDDEN, "너의 프로젝트가 아닙니다");
     AUTH_FAIL(HttpStatus.BAD_REQUEST, "인증 실패");
 
-
     private final HttpStatus httpStatus;
     private final String message;
 
