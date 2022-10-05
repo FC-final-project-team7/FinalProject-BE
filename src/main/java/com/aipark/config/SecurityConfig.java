@@ -58,12 +58,14 @@ public class SecurityConfig {
                         , "/webjars/**"
                         , "/swagger/**"
                         , "/favicon.ico"
-                        ,"/members/check-id"
+                        , "/members/check-id"
+                        , "/mails/**"
+                        , "/members/edit-pwd"
                 ).permitAll()
                 .anyRequest().authenticated()
 
                 .and()
-                .oauth2Login().loginPage("/test/oauth")
+                .oauth2Login()
                 .successHandler(OAuth2SuccessHandler)
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);

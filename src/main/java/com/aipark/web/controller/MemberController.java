@@ -40,6 +40,7 @@ public class MemberController {
      * @param requestDto
      * @return
      */
+
     @PutMapping("/edit-pwd")
     public ResponseEntity<String> editPwd(@RequestBody MemberDto.EditPwdRequest requestDto){
         memberService.editPwd(requestDto);
