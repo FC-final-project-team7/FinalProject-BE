@@ -15,7 +15,6 @@ import javax.persistence.*;
 @Table(name = "VIDEO")
 @Entity
 public class Video extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
