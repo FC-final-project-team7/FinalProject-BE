@@ -39,6 +39,7 @@ public class PythonService {
         jsonObject.put("avatar", request.getAvatar());
         jsonObject.put("background", request.getBackground());
         jsonObject.put("project_name", request.getProjectName());
+        jsonObject.put("is_audio", request.getIsAudio());
 
         // webClient를 사용하여 서버간 통신
         PythonServerDto.PythonResponse response = buildWebClient().post()

@@ -78,6 +78,7 @@ public class PythonServerDto {
         private String avatar;
         private String background;
         private String projectName;
+        private Boolean isAudio;
 
         public static VideoRequest of(Project project){
             return VideoRequest.builder()
@@ -86,6 +87,7 @@ public class PythonServerDto {
                     .avatar(project.getAvatar())
                     .background(project.getBackground())
                     .projectName(project.getProjectName())
+                    .isAudio(project.getIsAudio())
                     .build();
         }
         // temp.wav -> temp
