@@ -12,12 +12,21 @@ spring:
     show-sql: true
     properties:
       hibernate.format_sql: true
+#      Hibernate 가 초기화 후에 .sql 파일을 실행 시키도록 설정
+    defer-datasource-initialization: true
+#    모든 데이터베이스에 sql 스크립트를 동작
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:sql/schema.sql
+      data-locations: classpath:sql/data.sql
   config:
     import:
       - classpath:/application.yml
       - classpath:/application-db.yml
       - classpath:/application-jwt.yml
       - classpath:/application-oauth.yml
+      - classpath:/application-aws.yml
       - classpath:/application-email.yml
   mvc:
     pathmatch:
