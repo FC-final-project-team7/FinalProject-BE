@@ -83,10 +83,6 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
-        if (!checkMember(project.getMember().getUsername())) {
-            throw new MemberException(MemberErrorResult.MEMBER_INCORRECT);
-        }
-
         return project.createBasicDto();
     }
 
@@ -111,20 +107,6 @@ public class ProjectService {
         projectRepository.deleteById(projectId);
     }
 
-    /**
-     * 로그인한 사용자의 프로젝트에 접근했는지 체크해주는 메소드
-     *
-     * @param projectUsername
-     * @return
-     */
-    //TODO intercepter로 바꾸기
-    @Transactional(readOnly = true)
-    public boolean checkMember(String projectUsername) {
-        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
-                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
-
-        return member.getUsername().equals(projectUsername);
-    }
     public List<ProjectDto.BasicDto> getProjectList() {
         return projectRepository.findAll()
                 .stream()
