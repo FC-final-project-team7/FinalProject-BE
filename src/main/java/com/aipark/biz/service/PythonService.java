@@ -127,7 +127,7 @@ public class PythonService {
      */
     public WebClient buildWebClient() {
         return WebClient.builder()
-                .baseUrl("http://15.164.158.193:8000")
+                .baseUrl("http://localhost:8000")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
