@@ -31,10 +31,10 @@ public class MailService {
             't', 'u','v', 'w', 'x', 'y','z','1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
 
 
+
     public void sendAuthKey(MailDto.SendAuthKeyRequest sendRequestDto){
         Member member = memberRepository.findByUsername(sendRequestDto.getUsername()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
-
         if(!member.getEmail().equals(sendRequestDto.getEmail())
             || !member.getName().equals(sendRequestDto.getName())){
             throw new MemberException(MemberErrorResult.AUTH_FAIL);
@@ -51,10 +51,10 @@ public class MailService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+
         // 인증코드
         redisService.setValues(ePw, sendRequestDto.getEmail(), Duration.ofMillis(1000 * 60 * 30));
     }
-
     public String createRandom(int size){
         Random random = new Random(System.currentTimeMillis());
         int len = characterTable.length;
@@ -66,6 +66,7 @@ public class MailService {
 
         return sb.toString();
     }
+
 
     public MailDto.AuthKeyResponse verifyEmail(MailDto.VerifyRequest requestDto) {
         String email = redisService.getValues(requestDto.getKey());
