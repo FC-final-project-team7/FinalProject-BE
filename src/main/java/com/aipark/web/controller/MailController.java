@@ -32,9 +32,9 @@ public class MailController {
      * @return
      */
     @PostMapping("/send-key")
-    public ResponseEntity<MailDto.AuthKeyResponse> sendAuthKey(@RequestBody MailDto.SendAuthKeyRequest sendRequestDto){
-        MailDto.AuthKeyResponse key = mailService.sendAuthKey(sendRequestDto);
-        return ResponseEntity.ok(key);
+    public ResponseEntity<String> sendAuthKey(@RequestBody MailDto.SendAuthKeyRequest sendRequestDto){
+        mailService.sendAuthKey(sendRequestDto);
+        return ResponseEntity.ok("인증코드를 이메일로 보냈습니다.");
     }
 
     /**
@@ -43,8 +43,7 @@ public class MailController {
      * @return
      */
     @PostMapping("/verify")
-    public ResponseEntity<String> verifyAuthKey(@RequestBody MailDto.VerifyRequest requestDto){
-        mailService.verifyEmail(requestDto);
-        return ResponseEntity.ok("인증 되셨습니다.");
+    public ResponseEntity<MailDto.AuthKeyResponse> verifyAuthKey(@RequestBody MailDto.VerifyRequest requestDto){
+        return ResponseEntity.ok(mailService.verifyEmail(requestDto));
     }
 }
