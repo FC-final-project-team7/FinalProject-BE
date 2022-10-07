@@ -38,6 +38,10 @@ public class MemberService {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
 
+        if(!member.getUsername().equals(changeRequestDto.getUsername())){
+            throw new MemberException(MemberErrorResult.MEMBER_INCORRECT);
+        }
+
         if(!passwordEncoder.matches(changeRequestDto.getCurPassword(), member.getPassword())){
             throw new MemberException(MemberErrorResult.BAD_PASSWORD);
         }

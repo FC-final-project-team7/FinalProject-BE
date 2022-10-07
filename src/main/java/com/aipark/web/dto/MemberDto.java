@@ -39,6 +39,7 @@ public class MemberDto {
     @NoArgsConstructor
     @Builder
     public static class ChangeRequest{
+        private String username;
         private String curPassword;
         private String changePassword;
     }
