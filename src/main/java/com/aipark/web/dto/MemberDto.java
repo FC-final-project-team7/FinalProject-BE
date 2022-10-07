@@ -29,7 +29,6 @@ public class MemberDto {
     @Getter
     @ToString
     public static class EditPwdRequest{
-        private String username;
         private String password;
         private String token;
     }
