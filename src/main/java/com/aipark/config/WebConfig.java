@@ -27,10 +27,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/projects", "/projects/text", "/projects/audio", "/projects/avatar");
     }
     @Bean
-    public FilterRegistrationBean loginCheckFilter() {
+    public FilterRegistrationBean<Filter> checkMemberFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new CustomServletWrappingFilter());
-        filterRegistrationBean.setOrder(2);
         filterRegistrationBean.addUrlPatterns("/projects/auto");
         filterRegistrationBean.addUrlPatterns("/projects/{projectId}");
         filterRegistrationBean.addUrlPatterns("/projects/edit");
