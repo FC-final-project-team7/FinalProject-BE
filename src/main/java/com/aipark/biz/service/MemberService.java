@@ -38,6 +38,10 @@ public class MemberService {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
 
+
+        if(!member.getUsername().equals(changeRequestDto.getUsername())){
+            throw new MemberException(MemberErrorResult.MEMBER_INCORRECT);
+        }
         if(!passwordEncoder.matches(changeRequestDto.getCurPassword(), member.getPassword())){
             throw new MemberException(MemberErrorResult.BAD_PASSWORD);
         }
@@ -71,12 +75,12 @@ public class MemberService {
      */
     @Transactional
     public void editPwd(MemberDto.EditPwdRequest requestDto) {
-        String uuid = redisService.getValues(requestDto.getToken());
-        if(uuid.equals(requestDto.getUsername())){
+        String username = redisService.getValues(requestDto.getToken());
+        if(username == null){
             throw new MemberException(MemberErrorResult.AUTH_FAIL);
         }
 
-        Member member = memberRepository.findByUsername(requestDto.getUsername()).orElseThrow(
+        Member member = memberRepository.findByUsername(username).orElseThrow(
                 () ->  new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
 
         member.changePassword(passwordEncoder.encode(requestDto.getPassword()));
