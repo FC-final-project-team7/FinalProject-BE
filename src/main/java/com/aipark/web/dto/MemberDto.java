@@ -91,11 +91,13 @@ public class MemberDto {
     @NoArgsConstructor
     @Builder
     public static class MemberResponse{
+        private String username;
         private String name;
         private String email;
 
         public static MemberResponse of(Member member){
             return MemberResponse.builder()
+                    .username(member.getUsername())
                     .name(member.getName())
                     .email(member.getEmail())
                     .build();
