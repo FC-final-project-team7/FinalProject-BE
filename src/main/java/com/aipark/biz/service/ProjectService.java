@@ -256,7 +256,7 @@ public class ProjectService {
         PythonServerDto.PythonResponse videoFile = pythonService.createVideoFile(videoRequestDto);
 
         // url에 비디오 생성
-        Video video = Video.createVideo(videoFile.getUrl(), project.getProjectName());
+        Video video = Video.createVideo(videoFile.getUrl(), project);
 
         // member에 video 저장
         project.getMember().addVideo(video);

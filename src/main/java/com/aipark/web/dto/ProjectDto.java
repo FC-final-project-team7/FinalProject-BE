@@ -55,6 +55,7 @@ public class ProjectDto {
         private String language;
         private String sex;
         private String avatarAudio;
+        private LocalDateTime modifiedDate;
 
         public static TextResponse of(Project project) {
             return TextResponse.builder()
@@ -66,6 +67,7 @@ public class ProjectDto {
                     .language(project.getLanguage())
                     .sex(project.getSex())
                     .avatarAudio(project.getAvatarAudio())
+                    .modifiedDate(project.getModifiedDate())
                     .build();
         }
     }
@@ -105,6 +107,7 @@ public class ProjectDto {
         private String category2;
         private String category3;
         private String background;
+        private LocalDateTime modifiedDate;
 
         @Builder
         public BasicDto(Project project) {
@@ -124,6 +127,7 @@ public class ProjectDto {
             this.category2 = project.getCategory2();
             this.category3 = project.getCategory3();
             this.background = project.getBackground();
+            this.modifiedDate = project.getModifiedDate();
         }
 
         public Project toEntity() {
@@ -289,7 +293,7 @@ public class ProjectDto {
             this.name = video.getProjectName();
             this.generated = true;
             this.createdDate = video.getCreatedDate();
-            this.thumbnail = "";
+            this.thumbnail = video.getThumbnail();
         }
     }
 

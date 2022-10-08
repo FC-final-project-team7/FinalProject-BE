@@ -2,6 +2,7 @@ package com.aipark.biz.domain.video;
 
 import com.aipark.biz.domain.BaseTimeEntity;
 import com.aipark.biz.domain.member.Member;
+import com.aipark.biz.domain.project.Project;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,20 +24,24 @@ public class Video extends BaseTimeEntity {
 
     private String videoUrl;
 
+    private String thumbnail;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder
-    public Video(String videoUrl, String projectName) {
+    public Video(String videoUrl, String projectName, String thumbnail) {
         this.videoUrl = videoUrl;
         this.projectName = projectName;
+        this.thumbnail = thumbnail;
     }
 
-    public static Video createVideo(String videoUrl, String projectName){
+    public static Video createVideo(String videoUrl, Project project){
         return Video.builder()
                 .videoUrl(videoUrl)
-                .projectName(projectName)
+                .projectName(project.getProjectName())
+                .thumbnail(project.getAvatar())
                 .build();
     }
 
