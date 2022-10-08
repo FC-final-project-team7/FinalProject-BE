@@ -5,7 +5,7 @@ spring:
   jpa:
     open-in-view: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       use-new-id-generator-mappings: false
@@ -31,3 +31,4 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+      

@@ -31,11 +31,10 @@ public class MailService {
             't', 'u','v', 'w', 'x', 'y','z','1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
 
 
-    public MailDto.AuthKeyResponse sendAuthKey(MailDto.SendAuthKeyRequest sendRequestDto){
+
+    public void sendAuthKey(MailDto.SendAuthKeyRequest sendRequestDto){
         Member member = memberRepository.findByUsername(sendRequestDto.getUsername()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
-        boolean check1 = member.getEmail().equals(sendRequestDto.getEmail());
-        boolean check2 = member.getName().equals(sendRequestDto.getName());
         if(!member.getEmail().equals(sendRequestDto.getEmail())
             || !member.getName().equals(sendRequestDto.getName())){
             throw new MemberException(MemberErrorResult.AUTH_FAIL);
@@ -46,18 +45,15 @@ public class MailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom("wkdghwns97@gamil.com");
             helper.setTo(sendRequestDto.getEmail());
-            helper.setSubject("매일 인증하세요");
+            helper.setSubject("메일 인증하세요");
             helper.setText(createAuthMessage(), true);
             javaMailSender.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+
+        // 인증코드
         redisService.setValues(ePw, sendRequestDto.getEmail(), Duration.ofMillis(1000 * 60 * 30));
-
-        String uuid = createRandom(15);
-        redisService.setValues(uuid, sendRequestDto.getUsername(), Duration.ofMillis(1000 * 60 * 30));
-
-        return MailDto.AuthKeyResponse.of(uuid);
     }
     public String createRandom(int size){
         Random random = new Random(System.currentTimeMillis());
@@ -71,18 +67,20 @@ public class MailService {
         return sb.toString();
     }
 
-    public void verifyEmail(MailDto.VerifyRequest requestDto) {
-        Member member = memberRepository.findByEmail(requestDto.getEmail()).orElseThrow(
+
+    public MailDto.AuthKeyResponse verifyEmail(MailDto.VerifyRequest requestDto) {
+        String email = redisService.getValues(requestDto.getKey());
+        if(email == null){
+            throw new MemberException(MemberErrorResult.AUTH_FAIL);
+        }
+        // 토큰
+        Member member = memberRepository.findByEmail(email).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
 
-        String uuid = redisService.getValues(requestDto.getToken());
-        if(uuid.equals(member.getUsername())){
-            throw new MemberException(MemberErrorResult.AUTH_FAIL);
-        }
-        String values = redisService.getValues(requestDto.getKey());
-        if(!values.equals(requestDto.getEmail())){
-            throw new MemberException(MemberErrorResult.AUTH_FAIL);
-        }
+        String uuid = createRandom(15);
+        redisService.setValues(uuid, member.getUsername(), Duration.ofMillis(1000 * 60 * 30));
+
+        return MailDto.AuthKeyResponse.of(uuid);
     }
 
     public void sendId(MailDto.SendIdRequest sendIdRequestDto) {
@@ -97,7 +95,7 @@ public class MailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom("wkdghwns97@gamil.com");
             helper.setTo(sendIdRequestDto.getEmail());
-            helper.setSubject("아이디 확인하세요");
+            helper.setSubject("AIPark 이메일 보냅니다.");
             helper.setText(createIdMessage(member.getUsername()), true);
             javaMailSender.send(message);
         } catch (MessagingException e) {

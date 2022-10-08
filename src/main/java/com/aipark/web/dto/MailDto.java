@@ -13,7 +13,6 @@ public class MailDto {
     public static class SendIdRequest {
         private String name;
         private String email;
-        private String message;
     }
 
     @Getter
@@ -22,14 +21,11 @@ public class MailDto {
         private String username;
         private String name;
         private String email;
-        private String message;
     }
 
     @Getter
     @NoArgsConstructor
     public static class VerifyRequest{
-        private String token;
-        private String email;
         private String key;
     }
 

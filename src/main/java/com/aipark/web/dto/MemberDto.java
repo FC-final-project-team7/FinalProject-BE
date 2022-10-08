@@ -29,7 +29,6 @@ public class MemberDto {
     @Getter
     @ToString
     public static class EditPwdRequest{
-        private String username;
         private String password;
         private String token;
     }
@@ -39,6 +38,7 @@ public class MemberDto {
     @NoArgsConstructor
     @Builder
     public static class ChangeRequest{
+        private String username;
         private String curPassword;
         private String changePassword;
     }
@@ -91,11 +91,13 @@ public class MemberDto {
     @NoArgsConstructor
     @Builder
     public static class MemberResponse{
+        private String username;
         private String name;
         private String email;
 
         public static MemberResponse of(Member member){
             return MemberResponse.builder()
+                    .username(member.getUsername())
                     .name(member.getName())
                     .email(member.getEmail())
                     .build();

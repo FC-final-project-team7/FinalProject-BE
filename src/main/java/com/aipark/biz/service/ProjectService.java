@@ -66,7 +66,6 @@ public class ProjectService {
     public ProjectDto.AudioResponse audioSave(ProjectDto.AudioRequest audioRequest) throws IOException {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
-        
         MultipartFile audioFile = audioRequest.getAudioFile();
         ProjectDto.UploadFileDto uploadFileDto = fileStore.storeFile(audioFile);
         // 클라이언트로부터 프로젝트 ID 값을 받아와서 DB 에서 프로젝트를 조회하고
