@@ -1,5 +1,6 @@
 package com.aipark.biz.domain.project;
 
+import com.aipark.biz.domain.BaseTimeEntity;
 import com.aipark.biz.domain.member.Member;
 import com.aipark.web.dto.ProjectDto;
 import com.aipark.web.dto.PythonServerDto;
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @Table(name = "PROJECT")
 @Getter
 @Entity
-public class Project {
+public class Project extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
