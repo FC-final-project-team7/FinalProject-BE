@@ -24,7 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(checkMemberInterceptor())
                 .addPathPatterns("/projects/**")
-                .excludePathPatterns("/projects", "/projects/text", "/projects/audio", "/projects/avatar");
+                .excludePathPatterns("/projects", "/projects/text", "/projects/audio", "/projects/avatar","/projects/videos");
     }
     @Bean
     public FilterRegistrationBean<Filter> checkMemberFilter() {
