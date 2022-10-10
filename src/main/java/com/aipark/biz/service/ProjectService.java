@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,6 +78,7 @@ public class ProjectService {
         return ProjectDto.AudioResponse.of(save);
 
     }
+
     @Transactional(readOnly = true)
     public ProjectDto.BasicDto getProject(Long projectId) {
         Project project = projectRepository.findById(projectId).orElseThrow(
@@ -107,9 +109,14 @@ public class ProjectService {
     }
 
     public List<ProjectDto.BasicDto> getProjectList() {
+//        List<ProjectDto.BasicDto> basicDtoList = new ArrayList<>();
+//        projectRepository.findAll().forEach(project -> basicDtoList.add(new ProjectDto.BasicDto(project, imageRepository.findByImageName(project.getAvatar())
+//                .orElse(Image.createImage()))));
+
+//        return basicDtoList;
         return projectRepository.findAll()
                 .stream()
-                .map(ProjectDto.BasicDto::new)
+                .map(project-> new ProjectDto.BasicDto(project, imageRepository.findByImageName(project.getAvatar()).orElse(Image.createImage())))
                 .collect(Collectors.toList());
     }
 
@@ -204,25 +211,27 @@ public class ProjectService {
 
         String avatar = avatarRequest.getImageName();
         String substring = avatar.substring(6);
-        return imageRepository.findImagesByImageNameStartingWithOrCategoryStartingWith(substring,"BACKGROUND").stream()
+        return imageRepository.findImagesByImageNameStartingWithOrCategoryStartingWith(substring, "BACKGROUND").stream()
                 .map(ProjectDto.ValueDto::new)
                 .collect(Collectors.toList());
     }
 
     /**
      * 입력받은 value 및 배경 저장
+     *
      * @param selectedAvatarValue
      */
     @Transactional
     public void avatarAutoSave(ProjectDto.AvatarPageDto selectedAvatarValue) {
         Project project = projectRepository.findById(selectedAvatarValue.getProjectId()).orElseThrow(
-                ()->new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
+                () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
         project.setCategories(selectedAvatarValue);
     }
 
     /**
      * 문장별 음성 파일 생성 요청 시(생성 버튼 눌렀을 때)
      * s3에 저장되어있는 파일은 삭제하고, tempAudio 테이블의 주소를 바꿔준다.
+     *
      * @param requestDto
      * @return ProjectDto.TextAndUrlDto
      */
@@ -258,7 +267,7 @@ public class ProjectService {
         // thumbnail을 위한 이미지 불러오기
         String thumbnail = "https://jeongsu-aipark.s3.ap-northeast-2.amazonaws.com/black.png";
         Image imageName = imageRepository.findByImageName(project.getAvatar()).orElse(null);
-        if(imageName != null){
+        if (imageName != null) {
             thumbnail = imageName.getImageUrl();
         }
 

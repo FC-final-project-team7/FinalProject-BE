@@ -108,9 +108,10 @@ public class ProjectDto {
         private String category3;
         private String background;
         private LocalDateTime modifiedDate;
+        private String thumbnail;
 
         @Builder
-        public BasicDto(Project project) {
+        public BasicDto(Project project, Image image) {
             this.projectId = project.getId();
             this.projectName = project.getProjectName();
             this.avatarAudio = project.getAvatarAudio();
@@ -128,6 +129,7 @@ public class ProjectDto {
             this.category3 = project.getCategory3();
             this.background = project.getBackground();
             this.modifiedDate = project.getModifiedDate();
+            this.thumbnail = image.getImageUrl();
         }
 
         public Project toEntity() {
