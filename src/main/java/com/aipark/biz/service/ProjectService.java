@@ -1,5 +1,6 @@
 package com.aipark.biz.service;
 
+import com.aipark.biz.domain.image.Image;
 import com.aipark.biz.domain.image.ImageRepository;
 import com.aipark.biz.domain.member.Member;
 import com.aipark.biz.domain.member.MemberRepository;
@@ -16,7 +17,6 @@ import com.aipark.web.dto.ProjectDto;
 import com.aipark.web.dto.PythonServerDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -255,8 +255,15 @@ public class ProjectService {
         // 비디오 파일 생성
         PythonServerDto.PythonResponse videoFile = pythonService.createVideoFile(videoRequestDto);
 
+        // thumbnail을 위한 이미지 불러오기
+        String thumbnail = "https://jeongsu-aipark.s3.ap-northeast-2.amazonaws.com/black.png";
+        Image imageName = imageRepository.findByImageName(project.getAvatar()).orElse(null);
+        if(imageName != null){
+            thumbnail = imageName.getImageUrl();
+        }
+
         // url에 비디오 생성
-        Video video = Video.createVideo(videoFile.getUrl(), project);
+        Video video = Video.createVideo(videoFile.getUrl(), project.getProjectName(), thumbnail);
 
         // member에 video 저장
         project.getMember().addVideo(video);

@@ -2,7 +2,6 @@ package com.aipark.biz.domain.video;
 
 import com.aipark.biz.domain.BaseTimeEntity;
 import com.aipark.biz.domain.member.Member;
-import com.aipark.biz.domain.project.Project;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,11 +36,11 @@ public class Video extends BaseTimeEntity {
         this.thumbnail = thumbnail;
     }
 
-    public static Video createVideo(String videoUrl, Project project){
+    public static Video createVideo(String videoUrl, String projectName, String thumbnail){
         return Video.builder()
                 .videoUrl(videoUrl)
-                .projectName(project.getProjectName())
-                .thumbnail(project.getAvatar())
+                .projectName(projectName)
+                .thumbnail(thumbnail)
                 .build();
     }
 
