@@ -37,11 +37,11 @@ public class Video extends BaseTimeEntity {
         this.thumbnail = thumbnail;
     }
 
-    public static Video createVideo(String videoUrl, Project project){
+    public static Video createVideo(String videoUrl, String projectName, String thumbnail){
         return Video.builder()
                 .videoUrl(videoUrl)
-                .projectName(project.getProjectName())
-                .thumbnail(project.getAvatar())
+                .projectName(projectName)
+                .thumbnail(thumbnail)
                 .build();
     }
 
