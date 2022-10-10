@@ -75,6 +75,6 @@ public class FileStore {
 
     // S3의 파일 URL주소에서 파일 주소만 뽑아오기
     private String extractFileName(String fileName) {
-        return fileName.split("com/")[1];
+        return fileName.split("net/")[1];
     }
 }
