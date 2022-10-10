@@ -40,7 +40,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
         return new Docket(DocumentationType.SWAGGER_2)
                 .useDefaultResponseMessages(false)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.fastcampus.miniproject.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.aipark.web.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())
