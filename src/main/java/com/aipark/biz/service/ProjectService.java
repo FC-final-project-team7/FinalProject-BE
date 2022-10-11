@@ -95,18 +95,27 @@ public class ProjectService {
 
     @Transactional
     public void deleteProject(Long projectId) {
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
         Project project = projectRepository.findById(projectId).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
         if (!project.getAudio_uuid().isEmpty()) {
             // project에 저장되어있는 음성파일 삭제
-            fileStore.deleteFile(project.getAudio_uuid());
-
+            if (project.getIsAudio()) {
+                log.info("이프 안");
+                fileStore.deleteFileByAudio(project.getAudio_uuid(), member.getUsername());
+            }
+            if(!project.getIsAudio()) {
+                log.info("엘스 안");
+                fileStore.deleteFileByText(project.getAudio_uuid());
+            }
             // tempAudio에 저장되어있는 음성파일들 삭제
             List<TempAudio> tempAudioList = tempAudioRepository.findAllByProject(project);
-            if (!tempAudioList.isEmpty()) {
+            log.info("tempAudioList={}", tempAudioList);
+            if (tempAudioList.size() != 0) {
                 for (TempAudio tempAudio : tempAudioList) {
-                    fileStore.deleteFile(tempAudio.getTempUrl());
+                    fileStore.deleteFileByText(tempAudio.getTempUrl());
                 }
             }
         }
@@ -122,7 +131,7 @@ public class ProjectService {
 
         return projectRepository.findAllAsc(member)
                 .stream()
-                .map(project-> new ProjectDto.BasicDto(project, imageRepository.findByImageName(project.getAvatar()).orElse(Image.createImage())))
+                .map(project -> new ProjectDto.BasicDto(project, imageRepository.findByImageName(project.getAvatar()).orElse(Image.createImage())))
                 .collect(Collectors.toList());
     }
 
@@ -137,10 +146,18 @@ public class ProjectService {
     public ProjectDto.ModificationPageResponse textModificationPage(ProjectDto.ProjectAutoRequest requestDto) {
         Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
                 () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
-
+        Project project = projectRepository.findById(requestDto.getProjectId()).orElseThrow(
+                () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
+        // 받은 reqeustDto를 python server에 필요한 request로 변환하는 작업
         PythonServerDto.CreateAudioRequest request = requestDto.toCreateAudioRequest(member.getUsername());
 
+        // 전체 text로 음성파일을 만들고, project에 저장하는 작업
+        PythonServerDto.PythonResponse audioFile = pythonService.createAudioFile(request);
+        project.updateProjectAudioUrl(audioFile);
+
+        // 전체 text를 문장별로 나눠 음성을 만들고, tempAudio 테이블에 저장하는 작업
         ProjectDto.ModificationPageResponse response = pythonService.createSentenceAudioFile(request);
+        response.addAudio(audioFile.getUrl());
 
         return response;
     }
@@ -194,7 +211,7 @@ public class ProjectService {
 
         PythonServerDto.PythonResponse audioFile = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
 
-        fileStore.deleteFile(project.getAudio_uuid());
+        fileStore.deleteFileByText(project.getAudio_uuid());
 
         //project에 이름과 파일명 업데이트
         project.updateProjectAudioUrl(audioFile);
@@ -250,7 +267,7 @@ public class ProjectService {
 
         PythonServerDto.PythonResponse response = pythonService.createAudioFile(requestDto.toCreateAudioRequest(member.getUsername()));
 
-        fileStore.deleteFile(requestDto.getAudioUrl());
+        fileStore.deleteFileByText(requestDto.getAudioUrl());
 
         tempAudio.updateTempUrl(response.getUrl());
 
@@ -290,7 +307,7 @@ public class ProjectService {
         List<TempAudio> tempAudioList = tempAudioRepository.findAllByProject(project);
         if (!tempAudioList.isEmpty()) {
             for (TempAudio tempAudio : tempAudioList) {
-                fileStore.deleteFile(tempAudio.getTempUrl());
+                fileStore.deleteFileByText(tempAudio.getTempUrl());
             }
         }
         // tempAudio 삭제
