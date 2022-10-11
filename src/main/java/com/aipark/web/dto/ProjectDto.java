@@ -190,6 +190,10 @@ public class ProjectDto {
         public void setSentenceList(ProjectDto.Sentence sentence) {
             sentenceList.add(sentence);
         }
+
+        public void addAudio(String audioName) {
+            this.audio = audioName;
+        }
     }
 
     @Getter
