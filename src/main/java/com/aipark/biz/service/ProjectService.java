@@ -110,12 +110,10 @@ public class ProjectService {
     }
 
     public List<ProjectDto.BasicDto> getProjectList() {
-//        List<ProjectDto.BasicDto> basicDtoList = new ArrayList<>();
-//        projectRepository.findAll().forEach(project -> basicDtoList.add(new ProjectDto.BasicDto(project, imageRepository.findByImageName(project.getAvatar())
-//                .orElse(Image.createImage()))));
+        Member member = memberRepository.findByUsername(SecurityUtil.getCurrentMemberName()).orElseThrow(
+                () -> new MemberException(MemberErrorResult.MEMBER_NOT_FOUND));
 
-//        return basicDtoList;
-        return projectRepository.findAll()
+        return projectRepository.findAllAsc(member)
                 .stream()
                 .map(project-> new ProjectDto.BasicDto(project, imageRepository.findByImageName(project.getAvatar()).orElse(Image.createImage())))
                 .collect(Collectors.toList());
