@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,14 +91,16 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId).orElseThrow(
                 () -> new ProjectException(ProjectErrorResult.PROJECT_NOT_FOUND));
 
-        // project에 저장되어있는 음성파일 삭제
-        fileStore.deleteFile(project.getAudio_uuid());
+        if (!project.getAudio_uuid().isEmpty()) {
+            // project에 저장되어있는 음성파일 삭제
+            fileStore.deleteFile(project.getAudio_uuid());
 
-        // tempAudio에 저장되어있는 음성파일들 삭제
-        List<TempAudio> tempAudioList = tempAudioRepository.findAllByProject(project);
-        if (!tempAudioList.isEmpty()) {
-            for (TempAudio tempAudio : tempAudioList) {
-                fileStore.deleteFile(tempAudio.getTempUrl());
+            // tempAudio에 저장되어있는 음성파일들 삭제
+            List<TempAudio> tempAudioList = tempAudioRepository.findAllByProject(project);
+            if (!tempAudioList.isEmpty()) {
+                for (TempAudio tempAudio : tempAudioList) {
+                    fileStore.deleteFile(tempAudio.getTempUrl());
+                }
             }
         }
 
