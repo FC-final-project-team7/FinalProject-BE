@@ -72,7 +72,6 @@ public class MemberDto {
         private String email;
         private String password;
         private String name;
-        private String phoneNumber;
 
         public Member toEntity(PasswordEncoder passwordEncoder){
             return Member.builder()
@@ -80,7 +79,6 @@ public class MemberDto {
                     .email(email)
                     .password(passwordEncoder.encode(password))
                     .name(name)
-                    .phoneNumber(phoneNumber)
                     .authority(Authority.ROLE_USER)
                     .build();
         }

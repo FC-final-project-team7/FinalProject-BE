@@ -36,9 +36,6 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String phoneNumber;
-
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
@@ -49,12 +46,11 @@ public class Member extends BaseTimeEntity {
     private final List<Video> videoList = new ArrayList<>();
 
     @Builder
-    public Member(String username, String email, String password, String name, String phoneNumber, Authority authority) {
+    public Member(String username, String email, String password, String name, Authority authority) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.name = name;
-        this.phoneNumber = phoneNumber;
         this.authority = authority;
     }
 

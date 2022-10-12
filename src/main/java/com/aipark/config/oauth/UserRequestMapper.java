@@ -15,7 +15,6 @@ public class UserRequestMapper {
                 .email((String) attributes.get("email"))
                 .password((String) attributes.get("password"))
                 .name((String) attributes.get("name"))
-                .phoneNumber("010-3333-3333")
                 .build();
     }
 }
