@@ -4,10 +4,7 @@ import com.aipark.biz.domain.project.Project;
 import com.aipark.biz.domain.tempAudio.TempAudio;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -40,6 +37,11 @@ public class PythonServerDto {
                     .tempUrl(url)
                     .build();
         }
+
+        public void insertData(String status, List<SentenceAndUrl> url) {
+            this.status = status;
+            this.url = url;
+        }
     }
 
     @Getter
@@ -63,9 +65,15 @@ public class PythonServerDto {
     @AllArgsConstructor
     @Builder
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
+    @ToString
     public static class PythonResponse {
         private String status;
         private String url;
+
+        public void insertData(String status, String url) {
+            this.status = status;
+            this.url = url;
+        }
     }
 
     @Getter

@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,6 +33,8 @@ public class PythonService {
 
 
     public PythonServerDto.PythonResponse createVideoFile(PythonServerDto.VideoRequest request) {
+        CountDownLatch latch = new CountDownLatch(1);
+        PythonServerDto.PythonResponse responseDto = new PythonServerDto.PythonResponse();
         // Http 통신 body에 들어갈 json 객체 생성
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", request.getUsername());
@@ -42,20 +45,27 @@ public class PythonService {
         jsonObject.put("is_audio", request.getIsAudio());
 
         // webClient를 사용하여 서버간 통신
-        PythonServerDto.PythonResponse response = buildWebClient().post()
+        buildWebClient().post()
                 .uri("/video")
                 .body(Mono.just(jsonObject.toString()), JSONObject.class)
                 .retrieve()
                 .bodyToMono(PythonServerDto.PythonResponse.class)
-                .block();
-
+                .subscribe(response -> {
+                    responseDto.insertData(response.getStatus(), response.getUrl());
+                    latch.countDown();
+                });
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            throw new PythonException(PythonErrorResult.AUDIO_CREATE_ERROR);
+        }
         // 파이썬 서버에서 제대로 생성이 안되면 fail이 들어온다.
-        if (response.getStatus().equals("fail")) {
+        if (responseDto.getStatus().equals("fail")) {
             throw new PythonException(PythonErrorResult.AUDIO_CREATE_ERROR);
         }
 
         // 오디오들을 임시 음성 테이블에 저장한다.
-        return response;
+        return responseDto;
     }
     /**
      * 입력 페이지에서 수정 페이지로 넘어갈 때, 파이썬에 문장별 음성 파일 생성 요청할 때,
@@ -63,7 +73,8 @@ public class PythonService {
      * @return
      */
     public ProjectDto.ModificationPageResponse createSentenceAudioFile(PythonServerDto.CreateAudioRequest request) {
-
+        CountDownLatch latch = new CountDownLatch(1);
+        PythonServerDto.CreateAudioResponse responseDto = new PythonServerDto.CreateAudioResponse();
         List<String> sentences = divideSentence(request.getText());
 
         // Http 통신 body에 들어갈 json 객체 생성
@@ -73,22 +84,28 @@ public class PythonService {
         jsonObject.put("narration", request.getNarration());
 
         // webClient를 사용하여 서버간 통신
-        PythonServerDto.CreateAudioResponse response = buildWebClient().post()
+        buildWebClient().post()
                 .uri("/audios/sentence")
                 .body(Mono.just(jsonObject.toString()), JSONObject.class)
                 .retrieve()
                 .bodyToMono(PythonServerDto.CreateAudioResponse.class)
-                .block();
-
-        // 파이썬 서버에서 제대로 생성이 안되면 fail이 들어온다.
-        if (response.getStatus().equals("fail")) {
+                .subscribe(response -> {
+                    responseDto.insertData(response.getStatus(), response.getUrl());
+                    latch.countDown();
+                });
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
             throw new PythonException(PythonErrorResult.AUDIO_CREATE_ERROR);
         }
-
+        // 파이썬 서버에서 제대로 생성이 안되면 fail이 들어온다.
+        if (responseDto.getStatus().equals("fail")) {
+            throw new PythonException(PythonErrorResult.AUDIO_CREATE_ERROR);
+        }
         // 오디오들을 임시 음성 테이블에 저장한다.
-        saveTempAudio(response, request.getProjectId());
+        saveTempAudio(responseDto, request.getProjectId());
 
-        return createDto(request, response);
+        return createDto(request, responseDto);
     }
 
     /**
@@ -98,7 +115,8 @@ public class PythonService {
      * @return
      */
     public PythonServerDto.PythonResponse createAudioFile(PythonServerDto.CreateAudioRequest requestDto) {
-
+        CountDownLatch latch = new CountDownLatch(1);
+        PythonServerDto.PythonResponse responseDto = new PythonServerDto.PythonResponse();
         // Http 통신 body에 들어갈 json 객체 생성
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", requestDto.getUsername());
@@ -106,13 +124,20 @@ public class PythonService {
         jsonObject.put("narration", "none");
 
         // webClient를 사용하여 서버간 통신
-        PythonServerDto.PythonResponse responseDto = buildWebClient().post()
+        buildWebClient().post()
                 .uri("/audios")
                 .body(Mono.just(jsonObject.toString()), JSONObject.class)
                 .retrieve()
                 .bodyToMono(PythonServerDto.PythonResponse.class)
-                .block();
-
+                .subscribe(response -> {
+                    responseDto.insertData(response.getStatus(), response.getUrl());
+                    latch.countDown();
+                });
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            throw new PythonException(PythonErrorResult.AUDIO_CREATE_ERROR);
+        }
         // 파이썬 서버에서 제대로 생성이 안되면 fail이 들어온다.
         if (responseDto.getStatus().equals("fail")) {
             throw new PythonException(PythonErrorResult.AUDIO_CREATE_ERROR);
