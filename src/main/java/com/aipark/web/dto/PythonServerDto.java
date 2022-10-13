@@ -31,27 +31,6 @@ public class PythonServerDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class CreateAudioResponse {
-        private String status;
-        private List<SentenceAndUrl> url;
-
-        public static TempAudio toEntity(Project project, String url) {
-            return TempAudio.builder()
-                    .project(project)
-                    .tempUrl(url)
-                    .build();
-        }
-
-        public void insertData(String status, List<SentenceAndUrl> url) {
-            this.status = status;
-            this.url = url;
-        }
-    }
-
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
     public static class SentenceAndUrl {
         private String sentence;
         private String url;
@@ -106,7 +85,6 @@ public class PythonServerDto {
         public static String changeAudio(String audioName){
             String[] str = audioName.split("[/]");
             String result = str[str.length-1].split("[.]")[0];
-            log.info("UUID 분리 ㅣ: {}", result);
             return result;
         }
     }

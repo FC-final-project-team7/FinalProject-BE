@@ -283,16 +283,6 @@ public class ProjectDto {
     }
 
     @Getter
-    @AllArgsConstructor
-    public static class SelectedAvatarValue {
-        private Long projectId;
-        private String category1;
-        private String category2;
-        private String category3;
-        private String background;
-    }
-
-    @Getter
     @NoArgsConstructor
     public static class VideoListResponse{
         private Long id;
