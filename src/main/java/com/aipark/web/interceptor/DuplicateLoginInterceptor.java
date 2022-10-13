@@ -29,7 +29,6 @@ public class DuplicateLoginInterceptor implements HandlerInterceptor {
     @Value("${white.secret}")
     private String secret;
 
-    //TODO 다른사람이 로그인 하면, redis에 username을 키로 가지고 있는지 확인, 있으면 화이트리스트에서 조회해서 블랙리스트 추가하고 화이트리스트도 삭제
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -38,10 +37,14 @@ public class DuplicateLoginInterceptor implements HandlerInterceptor {
         ServletInputStream inputStream = request.getInputStream();
         String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
 
-        Map<String, Object> map = objectMapper.readValue(messageBody, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> map = objectMapper.readValue(messageBody, new TypeReference<Map<String, Object>>() {
+        });
         String username = (String) map.get("username");
 
         if (redisService.getValues(username) != null) {
+            if (redisService.getWhiteValues(username + "_" + secret) == null) {
+                return true;
+            }
             String whiteValues = redisService.getWhiteValues(username + "_" + secret);
             redisService.setBlackValues(whiteValues, username, Duration.ofMillis(1000 * 60 * 30));
             redisService.deleteWhiteValues(username);
