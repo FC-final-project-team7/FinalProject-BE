@@ -21,6 +21,10 @@ public class PythonServerDto {
         private String narration;
         private String text;
         private Long projectId;
+
+        public void setText(String text){
+            this.text = text;
+        }
     }
 
     @Getter

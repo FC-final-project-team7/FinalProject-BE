@@ -201,6 +201,13 @@ public class ProjectDto {
     public static class Sentence {
         private String sentence;
         private String sentenceAudio;
+
+        public static Sentence of(String sentence, String sentenceAudio){
+            return Sentence.builder()
+                    .sentence(sentence)
+                    .sentenceAudio(sentenceAudio)
+                    .build();
+        }
     }
 
     @Getter

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,16 +104,13 @@ public class ProjectService {
         if (!project.getAudio_uuid().isEmpty()) {
             // project에 저장되어있는 음성파일 삭제
             if (project.getIsAudio()) {
-                log.info("이프 안");
                 fileStore.deleteFileByAudio(project.getAudio_uuid(), member.getUsername());
             }
             if(!project.getIsAudio()) {
-                log.info("엘스 안");
                 fileStore.deleteFileByText(project.getAudio_uuid());
             }
             // tempAudio에 저장되어있는 음성파일들 삭제
             List<TempAudio> tempAudioList = tempAudioRepository.findAllByProject(project);
-            log.info("tempAudioList={}", tempAudioList);
             if (tempAudioList.size() != 0) {
                 for (TempAudio tempAudio : tempAudioList) {
                     fileStore.deleteFileByText(tempAudio.getTempUrl());
@@ -155,11 +153,25 @@ public class ProjectService {
         PythonServerDto.PythonResponse audioFile = pythonService.createAudioFile(request);
         project.updateProjectAudioUrl(audioFile);
 
-        // 전체 text를 문장별로 나눠 음성을 만들고, tempAudio 테이블에 저장하는 작업
-        ProjectDto.ModificationPageResponse response = pythonService.createSentenceAudioFile(request);
-        response.addAudio(audioFile.getUrl());
+        // 전체 text 나누기
+        List<String> sentence = divideSentence(request.getText());
+        ProjectDto.ModificationPageResponse mpr = ProjectDto.ModificationPageResponse.of(request);
+        for (String s : sentence) {
+            PythonServerDto.CreateAudioRequest car = requestDto.toCreateAudioRequest(member.getUsername());
+            car.setText(s);
+            PythonServerDto.PythonResponse sentenceAudio = pythonService.createAudioFile(car);
 
-        return response;
+            ProjectDto.Sentence sen = ProjectDto.Sentence.of(s,sentenceAudio.getUrl());
+            tempAudioRepository.save(TempAudio.builder().project(project).tempUrl(sentenceAudio.getUrl()).build());
+            mpr.setSentenceList(sen);
+        }
+        mpr.addAudio(audioFile.getUrl());
+
+        // 전체 text를 문장별로 나눠 음성을 만들고, tempAudio 테이블에 저장하는 작업
+//        ProjectDto.ModificationPageResponse response = pythonService.createSentenceAudioFile(request);
+//        response.addAudio(audioFile.getUrl());
+
+        return mpr;
     }
 
     /**
@@ -332,5 +344,14 @@ public class ProjectService {
                 () -> new ProjectException(ProjectErrorResult.VIDEO_NOT_FOUND));
 
         return ProjectDto.VideoResponse.of(video);
+    }
+
+    /**
+     * 문장을 나눠주는 메소드
+     * @param text
+     * @return
+     */
+    public List<String> divideSentence(String text) {
+        return Arrays.stream(text.split("[.]")).map(s -> s.concat(".")).collect(Collectors.toList());
     }
 }
