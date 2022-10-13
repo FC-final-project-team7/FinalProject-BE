@@ -11,23 +11,6 @@ public class MemberDto {
     @NoArgsConstructor
     @Getter
     @ToString
-    public static class FindIdRequest{
-        private String name;
-        private String email;
-    }
-
-    @NoArgsConstructor
-    @Getter
-    @ToString
-    public static class FindPwdRequest{
-        private String username;
-        private String name;
-        private String email;
-    }
-
-    @NoArgsConstructor
-    @Getter
-    @ToString
     public static class EditPwdRequest{
         private String password;
         private String token;

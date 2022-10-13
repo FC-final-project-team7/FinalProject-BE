@@ -201,6 +201,13 @@ public class ProjectDto {
     public static class Sentence {
         private String sentence;
         private String sentenceAudio;
+
+        public static Sentence of(String sentence, String sentenceAudio){
+            return Sentence.builder()
+                    .sentence(sentence)
+                    .sentenceAudio(sentenceAudio)
+                    .build();
+        }
     }
 
     @Getter
@@ -273,16 +280,6 @@ public class ProjectDto {
     public static class AvatarRequest {
         private Long projectId;
         private String imageName;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public static class SelectedAvatarValue {
-        private Long projectId;
-        private String category1;
-        private String category2;
-        private String category3;
-        private String background;
     }
 
     @Getter
