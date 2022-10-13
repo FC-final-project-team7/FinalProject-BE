@@ -3,14 +3,12 @@ package com.aipark.web.controller;
 import com.aipark.biz.service.ProjectService;
 import com.aipark.web.dto.ProjectDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
 
-@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("projects")
