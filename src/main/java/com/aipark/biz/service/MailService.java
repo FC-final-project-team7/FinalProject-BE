@@ -6,7 +6,6 @@ import com.aipark.exception.MemberErrorResult;
 import com.aipark.exception.MemberException;
 import com.aipark.web.dto.MailDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import javax.mail.internet.MimeMessage;
 import java.time.Duration;
 import java.util.Random;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MailService {

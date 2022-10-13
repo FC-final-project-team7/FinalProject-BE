@@ -1,16 +1,9 @@
 package com.aipark.biz.service;
 
-import com.aipark.biz.domain.project.Project;
-import com.aipark.biz.domain.project.ProjectRepository;
-import com.aipark.biz.domain.tempAudio.TempAudioRepository;
-import com.aipark.exception.ProjectErrorResult;
-import com.aipark.exception.ProjectException;
 import com.aipark.exception.PythonErrorResult;
 import com.aipark.exception.PythonException;
-import com.aipark.web.dto.ProjectDto;
 import com.aipark.web.dto.PythonServerDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -18,19 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PythonService {
-
-    private final TempAudioRepository tempAudioRepository;
-    private final ProjectRepository projectRepository;
-
 
     public PythonServerDto.PythonResponse createVideoFile(PythonServerDto.VideoRequest request) {
         CountDownLatch latch = new CountDownLatch(1);

@@ -1,10 +1,8 @@
 package com.aipark.web.interceptor;
 
-import com.aipark.biz.domain.member.MemberRepository;
 import com.aipark.biz.service.RedisService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StreamUtils;
@@ -17,11 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Map;
 
-@Slf4j
 public class DuplicateLoginInterceptor implements HandlerInterceptor {
-
-    @Autowired
-    private MemberRepository memberRepository;
 
     @Autowired
     private RedisService redisService;

@@ -1,15 +1,13 @@
 package com.aipark.web.dto;
 
 import com.aipark.biz.domain.project.Project;
-import com.aipark.biz.domain.tempAudio.TempAudio;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.*;
-import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-@Slf4j
 public class PythonServerDto {
 
     @Getter
