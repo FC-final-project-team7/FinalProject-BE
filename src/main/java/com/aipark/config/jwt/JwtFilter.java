@@ -25,8 +25,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwt = resolveToken(request);
         if(jwt != null && tokenProvider.validateToken(jwt)) {
-            String logout = redisService.getValues(jwt);
-//            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+            String logout = redisService.getBlackValues(jwt);
             if(!StringUtils.hasText(logout)){
                 Authentication authentication = tokenProvider.getAuthentication(jwt);
                 SecurityContextHolder.getContext().setAuthentication(authentication);

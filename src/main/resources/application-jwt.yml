@@ -1,2 +1,4 @@
 jwt:
   secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK
+white:
+  secret: 84797b0cd65733d59c0f253defe5742159311143
