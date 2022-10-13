@@ -2,6 +2,7 @@ package com.aipark.config;
 
 import com.aipark.web.filter.CustomServletWrappingFilter;
 import com.aipark.web.interceptor.CheckMemberInterceptor;
+import com.aipark.web.interceptor.DuplicateLoginInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -20,12 +21,20 @@ public class WebConfig implements WebMvcConfigurer {
         return new CheckMemberInterceptor();
     }
 
+    @Bean
+    public DuplicateLoginInterceptor duplicateLoginInterceptor() {
+        return new DuplicateLoginInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(duplicateLoginInterceptor())
+                .addPathPatterns("/auth/login");
         registry.addInterceptor(checkMemberInterceptor())
                 .addPathPatterns("/projects/**")
-                .excludePathPatterns("/projects", "/projects/text", "/projects/audio", "/projects/avatar","/projects/videos");
+                .excludePathPatterns("/projects", "/projects/text", "/projects/audio", "/projects/avatar", "/projects/videos");
     }
+
     @Bean
     public FilterRegistrationBean<Filter> checkMemberFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
@@ -39,6 +48,7 @@ public class WebConfig implements WebMvcConfigurer {
         filterRegistrationBean.addUrlPatterns("/projects/avatar/category");
         filterRegistrationBean.addUrlPatterns("/projects/avatar/text");
         filterRegistrationBean.addUrlPatterns("/projects/avatar/sentence");
+        filterRegistrationBean.addUrlPatterns("/auth/login");
         return filterRegistrationBean;
     }
 }

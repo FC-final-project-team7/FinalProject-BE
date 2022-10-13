@@ -48,7 +48,6 @@ public class PythonServerDto {
     @AllArgsConstructor
     @Builder
     @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-    @ToString
     public static class PythonResponse {
         private String status;
         private String url;

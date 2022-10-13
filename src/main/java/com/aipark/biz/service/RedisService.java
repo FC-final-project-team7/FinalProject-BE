@@ -11,11 +11,8 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class RedisService {
     private final RedisTemplate<String, String> redisTemplate;
-
-    public void setValues(String key, String data){
-        ValueOperations<String, String> values = redisTemplate.opsForValue();
-        values.set(key, data);
-    }
+    private final RedisTemplate<String, String> redisWhiteListTemplate;
+    private final RedisTemplate<String, String> redisBlackListTemplate;
 
     public void setValues(String key, String data, Duration duration){
         ValueOperations<String, String> values = redisTemplate.opsForValue();
@@ -29,5 +26,33 @@ public class RedisService {
 
     public void deleteValues(String key){
         redisTemplate.delete(key);
+    }
+
+    public void setWhiteValues(String key, String data, Duration duration){
+        ValueOperations<String, String> values = redisWhiteListTemplate.opsForValue();
+        values.set(key, data, duration);
+    }
+
+    public String getWhiteValues(String key){
+        ValueOperations<String, String> values = redisWhiteListTemplate.opsForValue();
+        return values.get(key);
+    }
+
+    public void deleteWhiteValues(String key){
+        redisWhiteListTemplate.delete(key);
+    }
+
+    public void setBlackValues(String key, String data, Duration duration){
+        ValueOperations<String, String> values = redisBlackListTemplate.opsForValue();
+        values.set(key, data, duration);
+    }
+
+    public String getBlackValues(String key){
+        ValueOperations<String, String> values = redisBlackListTemplate.opsForValue();
+        return values.get(key);
+    }
+
+    public void deleteBlackValues(String key){
+        redisBlackListTemplate.delete(key);
     }
 }

@@ -2,15 +2,12 @@ package com.aipark.biz.service;
 
 import com.aipark.biz.domain.member.Member;
 import com.aipark.biz.domain.member.MemberRepository;
-import com.aipark.config.SecurityUtil;
 import com.aipark.config.jwt.TokenProvider;
-import com.aipark.exception.MemberException;
-import com.aipark.exception.MemberErrorResult;
 import com.aipark.web.dto.MemberDto;
 import com.aipark.web.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.boot.model.naming.IllegalIdentifierException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -29,6 +26,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RedisService redisService;
+
+    @Value("${white.secret}")
+    private String secret;
 
     @Transactional
     public MemberDto.MemberResponse signup(MemberDto.SignRequest memberRequestDto) {
@@ -56,6 +56,9 @@ public class AuthService {
         redisService.setValues(memberRequestDto.getUsername(),
                 tokenResponseDto.getRefreshToken(),
                 Duration.ofMillis(tokenResponseDto.getTokenExpiresIn()));
+        redisService.setWhiteValues(memberRequestDto.getUsername() + "_" + secret,
+                tokenResponseDto.getAccessToken(),
+                Duration.ofMillis(1000 * 60 * 30));
         // 5. 토큰 발급
         return tokenResponseDto;
     }
@@ -90,7 +93,7 @@ public class AuthService {
 
         Long expiredAccessTokenTime = tokenProvider.getExpiration(tokenRequestDto.getAccessToken());
 
-        redisService.setValues(tokenRequestDto.getAccessToken(),
+        redisService.setBlackValues(tokenRequestDto.getAccessToken(),
                 authentication.getName(),
                 Duration.ofMillis(expiredAccessTokenTime));
 
