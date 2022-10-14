@@ -32,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/auth/login");
         registry.addInterceptor(checkMemberInterceptor())
                 .addPathPatterns("/projects/**")
-                .excludePathPatterns("/projects", "/projects/text", "/projects/audio", "/projects/avatar", "/projects/videos");
+                .excludePathPatterns("/projects", "/projects/text", "/projects/audio", "/projects/avatar", "/projects/videos", "/projects/audio/sentence", "/projects/audio/text", "/projects/voice");
     }
 
     @Bean

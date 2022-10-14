@@ -53,7 +53,7 @@ public class AuthService {
         // redis refresh토큰 저장
         redisService.setValues(memberRequestDto.getUsername(),
                 tokenResponseDto.getRefreshToken(),
-                Duration.ofMillis(tokenResponseDto.getTokenExpiresIn()));
+                Duration.ofMillis(1000 * 60 * 60 * 24 * 7));
         redisService.setWhiteValues(memberRequestDto.getUsername() + "_" + secret,
                 tokenResponseDto.getAccessToken(),
                 Duration.ofMillis(1000 * 60 * 30));
