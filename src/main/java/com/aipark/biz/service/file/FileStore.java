@@ -61,7 +61,6 @@ public class FileStore {
     // S3에서 파일 삭제(오디오 프로젝트)
     public boolean deleteFileByAudio(String oldAudio, String username) {
         try {
-            log.info("트라이 안");
             amazonS3.deleteObject(new DeleteObjectRequest(bucket, addFileName(oldAudio, username)));
         } catch (RuntimeException e) {
             throw new AwsException(AwsErrorResult.AWS_ERROR);
