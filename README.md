@@ -62,6 +62,7 @@
 ### 🧑🏻‍💻 팀원 이중권(@leejk0924)
 - swagger 기능 구현
 - Multipart/form-data로 음성 파일 받아서 S3에 저장
+- 필터와 인터셉터를 사용하여 중복로그인을 방지
 - API 구현
 - AWS 서버 배포
 - CI/CD 환경 구축
