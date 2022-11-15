@@ -29,7 +29,7 @@
 
 ### 👉 미리보기 링크 및 요청 URL  
 - Cleint : https://just-try-eat-ai-video-dev.netlify.app/
-- Server : https://aipark.crjkje.com
+- Server : https://aipark.crjkje.com(배포중지)
 <br><br>
 (유튜브 링크 넣어서 미리보기 만들기)
 
